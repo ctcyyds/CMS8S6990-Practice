@@ -1,0 +1,361 @@
+C51 COMPILER V9.52.0.0   PGA                                                               09/06/2023 18:09:43 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE PGA
+OBJECT MODULE PLACED IN .\Objects\pga.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\Lib\pga.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Code\CMS;.\Code\Lib;.
+                    -\Code\User;.\Code\Hardware\UART) DEBUG PRINT(.\Listings\pga.lst) TABS(2) OBJECT(.\Objects\pga.obj)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          * Copyright (C) 2019 China Micro Semiconductor Limited Company. All Rights Reserved.
+   3          *
+   4          * This software is owned and published by:
+   5          * CMS LLC, No 2609-10, Taurus Plaza, TaoyuanRoad, NanshanDistrict, Shenzhen, China.
+   6          *
+   7          * BY DOWNLOADING, INSTALLING OR USING THIS SOFTWARE, YOU AGREE TO BE BOUND
+   8          * BY ALL THE TERMS AND CONDITIONS OF THIS AGREEMENT.
+   9          *
+  10          * This software contains source code for use with CMS
+  11          * components. This software is licensed by CMS to be adapted only
+  12          * for use in systems utilizing CMS components. CMS shall not be
+  13          * responsible for misuse or illegal use of this software for devices not
+  14          * supported herein. CMS is providing this software "AS IS" and will
+  15          * not be responsible for issues arising from incorrect user implementation
+  16          * of the software.
+  17          *
+  18          * This software may be replicated in part or whole for the licensed use,
+  19          * with the restriction that this Disclaimer and Copyright notice must be
+  20          * included with each copy of this software, whether used in part or whole,
+  21          * at all times.
+  22          */
+  23          
+  24          /****************************************************************************/
+  25          /** \file pga.c
+  26          **
+  27          **  
+  28          **
+  29          **  History:
+  30          **  
+  31          *****************************************************************************/
+  32          /****************************************************************************/
+  33          /*  include files
+  34          *****************************************************************************/
+  35          #include "pga.h"
+  36          
+  37          /****************************************************************************/
+  38          /*  Local pre-processor symbols/macros('#define')
+  39          ****************************************************************************/
+  40          
+  41          /****************************************************************************/
+  42          /*  Global variable definitions(declared in header file with 'extern')
+  43          ****************************************************************************/
+  44          
+  45          /****************************************************************************/
+  46          /*  Local type definitions('typedef')
+  47          ****************************************************************************/
+  48          
+  49          /****************************************************************************/
+  50          /*  Local variable  definitions('static')
+  51          ****************************************************************************/
+  52          
+  53          /****************************************************************************/
+  54          /*  Local function prototypes('static')
+C51 COMPILER V9.52.0.0   PGA                                                               09/06/2023 18:09:43 PAGE 2   
+
+  55          ****************************************************************************/
+  56          
+  57          /****************************************************************************/
+  58          /*  Function implementation - global ('extern') and local('static')
+  59          ****************************************************************************/
+  60          
+  61          /*****************************************************************************
+  62           ** \brief   PGA_EnableNormalMode
+  63           **      使能PGA正常运行模式
+  64           ** \param [in] RunMode:  (1)PGA_NORM_SINGLE    正常模式：单端输入模式
+  65           **             (2)PGA_NORM_SHAM_DIFFERENCE 正常模式：伪差分输入模式
+  66           ** \return  none
+  67           ** \note   
+  68           *****************************************************************************/
+  69          void PGA_EnableNormalMode(uint8_t PGAMode)
+  70          {
+  71   1        uint8_t Temp=0;
+  72   1        
+  73   1        PGACON3 &= ~(PGA_PGACON3_PGAMODE_Msk);
+  74   1        Temp = PGACON0;
+  75   1        Temp &= ~(PGA_PGACON0_PGAMS_Msk);
+  76   1        Temp |= PGAMode<<PGA_PGACON0_PGAMS_Pos;
+  77   1        PGACON0 = Temp;
+  78   1      }
+  79          
+  80          /*****************************************************************************
+  81           ** \brief   PGA_ConfigInput
+  82           **      设置PGA输入
+  83           ** \param [in] Port:  (1)PGA_SIG_PGAP    PGAP端口
+  84           **             (2)PGA_SIG_PGAGND   PGAGND端口
+  85           **             (3)PGA_DIF_H_PGAP_L_PGAGND  差分模式：高端接PGAP，低端接PGAGAND
+  86           **             (4)PGA_DIF_H_PGAGND_L_PGAP  差分模式：高端接PGAGND，低端接PGAP        
+  87           ** \return  none
+  88           ** \note   
+  89           *****************************************************************************/
+  90          void PGA_ConfigInput(uint8_t Port)
+  91          {
+  92   1        uint8_t Temp=0;
+  93   1        
+  94   1        Temp = PGACON0;
+  95   1        Temp &= ~(PGA_PGACON0_PGAPS_Msk);
+  96   1        Temp |= Port;
+  97   1        PGACON0 = Temp;
+  98   1      }
+  99          
+ 100          /*****************************************************************************
+ 101           ** \brief   PGA_EnableOutput
+ 102           **      使能PGA输出
+ 103           ** \param [in] none
+ 104           ** \return  none
+ 105           ** \note   
+ 106          *****************************************************************************/
+ 107          void PGA_EnableOutput(void)
+ 108          {
+ 109   1        PGACON2 |= PGA_PGACON2_PGATEN_Msk;
+ 110   1      }
+ 111          /*****************************************************************************
+ 112           ** \brief   PGA_DisableOutput
+ 113           **      关闭PGA输出
+ 114           ** \param [in] none
+ 115           ** \return  none
+ 116           ** \note   
+C51 COMPILER V9.52.0.0   PGA                                                               09/06/2023 18:09:43 PAGE 3   
+
+ 117          *****************************************************************************/
+ 118          void PGA_DisableOutput(void)
+ 119          {
+ 120   1        PGACON2 &= ~(PGA_PGACON2_PGATEN_Msk); 
+ 121   1      }
+ 122          
+ 123          /*****************************************************************************
+ 124           ** \brief   PGA_ConfigGain
+ 125           **      配置PGA放大增益
+ 126           ** \param [in] Gain:  (1)PGA_GAIN_1
+ 127           **            (2)PGA_GAIN_2
+ 128           **            (3)PGA_GAIN_4 
+ 129           **            (4)PGA_GAIN_8
+ 130           **            (5)PGA_GAIN_16 
+ 131           **            (6)PGA_GAIN_32
+ 132           **            (7)PGA_GAIN_64 
+ 133           **            (8)PGA_GAIN_128
+ 134           ** \return  none
+ 135           ** \note   
+ 136          *****************************************************************************/
+ 137          void PGA_ConfigGain(uint8_t Gain)
+ 138          {
+ 139   1        uint8_t Temp=0;
+ 140   1        
+ 141   1        Temp = PGACON0;
+ 142   1        Temp &= ~(PGA_PGACON0_PGAGS_Msk);
+ 143   1        Temp |= Gain<<PGA_PGACON0_PGAGS_Pos;
+ 144   1        PGACON0 = Temp;
+ 145   1      }
+ 146          
+ 147          /*****************************************************************************
+ 148           ** \brief   PGA_ConfigOffsetAdj
+ 149           **      配置PGA失调电压调节方式
+ 150           ** \param [in] OffsetAdj:  (1)PGA_OFFSET_PGAADJ
+ 151           **             (2)PGA_OFFSET_CONFIG
+ 152           **       AdjVlue : 失调电压调节值：0x00~0x3f
+ 153           ** \return  none
+ 154           ** \note   
+ 155          *****************************************************************************/
+ 156          void PGA_ConfigOffsetAdj(uint8_t OffsetAdj, uint8_t AdjVlue)
+ 157          {
+ 158   1        uint8_t Temp=0;
+ 159   1        
+ 160   1        Temp = PGACON3;
+ 161   1        Temp &= ~(PGA_PGACON3_PGAADJ_Msk);
+ 162   1        Temp |= AdjVlue;
+ 163   1        PGACON3 = Temp;
+ 164   1        PGAADJE = OffsetAdj;
+ 165   1      }
+ 166          
+ 167          
+ 168          /*****************************************************************************
+ 169           ** \brief   PGA_EnableSHA
+ 170           **      开启PGA采样保持器
+ 171           ** \param [in] none
+ 172           ** \return  none
+ 173           ** \note   
+ 174          *****************************************************************************/
+ 175          void PGA_EnableSHA(void)
+ 176          {
+ 177   1        PGACON1 &= ~(PGA_PGACON1_PGAAMS_Msk);
+ 178   1      }
+C51 COMPILER V9.52.0.0   PGA                                                               09/06/2023 18:09:43 PAGE 4   
+
+ 179          
+ 180          /*****************************************************************************
+ 181           ** \brief   PGA_DisableSHA
+ 182           **      关闭PGA采样保持器
+ 183           ** \param [in] none
+ 184           ** \return  none
+ 185           ** \note   
+ 186          *****************************************************************************/
+ 187          void PGA_DisableSHA(void)
+ 188          {
+ 189   1        PGACON1 |= PGA_PGACON1_PGAAMS_Msk;
+ 190   1      }
+ 191          
+ 192          /*****************************************************************************
+ 193           ** \brief   PGA_ConfigSampleTime
+ 194           **      设置PGA采样保持器采样保持时间
+ 195           ** \param [in] SampleTime: PGA_SHT_1 ... PGA_SHT_16
+ 196           ** \return  none
+ 197           ** \note   
+ 198          *****************************************************************************/
+ 199          void PGA_ConfigSampleTime(uint8_t SampleTime)
+ 200          {
+ 201   1        uint8_t Temp=0;
+ 202   1        
+ 203   1        Temp = PGACON1;
+ 204   1        Temp &= ~(PGA_PGACON1_PGASHT_Msk);
+ 205   1        Temp |= SampleTime;
+ 206   1        PGACON1 = Temp;
+ 207   1      }
+ 208          
+ 209          
+ 210          /*****************************************************************************
+ 211           ** \brief   PGA_Start
+ 212           **      开启PGA
+ 213           ** \param [in]none
+ 214           ** \return  none
+ 215           ** \note   
+ 216          *****************************************************************************/
+ 217          void PGA_Start(void)
+ 218          {
+ 219   1        PGACON0 |= PGA_PGACON0_PGAEN_Msk;
+ 220   1      }
+ 221          /*****************************************************************************
+ 222           ** \brief   PGA_Stop
+ 223           **      关闭PGA
+ 224           ** \param [in]none
+ 225           ** \return  none
+ 226           ** \note   
+ 227          *****************************************************************************/
+ 228          void PGA_Stop(void)
+ 229          {
+ 230   1        PGACON0 &= ~(PGA_PGACON0_PGAEN_Msk);
+ 231   1      }
+ 232          
+ 233          
+ 234          /*****************************************************************************
+ 235           ** \brief   PGA_GetOutValue
+ 236           **      获取PGA输出值
+ 237           ** \param [in]none
+ 238           ** \return  0/1
+ 239           ** \note   
+ 240          *****************************************************************************/
+C51 COMPILER V9.52.0.0   PGA                                                               09/06/2023 18:09:43 PAGE 5   
+
+ 241          static uint8_t PGA_GetOutValue(void)
+ 242          {
+ 243   1        return((PGACON2 & PGA_PGACON2_PGADOUT_Msk)? 1:0);
+ 244   1      }
+ 245          
+ 246          
+ 247          /*****************************************************************************
+ 248           ** \brief   PGA_Delay
+ 249           **      延时函数
+ 250           ** \param [in]none
+ 251           ** \return  none
+ 252           ** \note   
+ 253          *****************************************************************************/
+ 254          static void PGA_Delay(void)
+ 255          {
+ 256   1        volatile uint8_t i;
+ 257   1        for(i=0;i<50;i++)
+ 258   1          _nop_();
+ 259   1      }
+ 260          
+ 261          /*****************************************************************************
+ 262           ** \brief   PGA_GetOffsetAdjValue
+ 263           **      获取PGA失调电压调节值
+ 264           ** \param [in] AdjMode:  (1)PGA_ADJ_MODE0      内部输入短接到地
+ 265           **             (2)PGA_ADJ_MODE1      内部输入短接，外部从PGAP给不同的共模点
+ 266           **             (3)PGA_ADJ_MODE2      内部输入短接，外部从PGAGND给不同的共模点       
+ 267           ** \return  5位失调电压修调值
+ 268           ** \note   
+ 269           *****************************************************************************/
+ 270          uint8_t  PGA_GetOffsetAdjValue(uint8_t AdjMode)
+ 271          {
+ 272   1        uint8_t temp, PgaOut,Adjvalue, PGACON3Temp;
+ 273   1        Adjvalue =0;
+ 274   1        
+ 275   1        /*(1)关闭PGA*/
+ 276   1        PGA_Stop(); 
+ 277   1        PGA_DisableSHA(); 
+ 278   1        /*(2)设置PGA的修调模式*/
+ 279   1        if( PGA_ADJ_MODE0 == AdjMode)
+ 280   1        {
+ 281   2          PGACON3 = (0x1<<6);
+ 282   2        }
+ 283   1        if( PGA_ADJ_MODE1 == AdjMode)
+ 284   1        {
+ 285   2          PGACON3 = (0x2<<6);
+ 286   2          P31CFG = 0x01;      //设置P31为PGAP    
+ 287   2        } 
+ 288   1        if( PGA_ADJ_MODE2 == AdjMode)
+ 289   1        {
+ 290   2          PGACON3 = (0x3<<6);
+ 291   2          P32CFG = 0x01;      //设置P32为PGAGND      
+ 292   2        }
+ 293   1        /*(3)设置PGA的修调值来源为PGAADJ<5:0>*/
+ 294   1        PGAADJE = 0xAA;
+ 295   1        /*(4)开启PGA*/
+ 296   1        PGA_Start();
+ 297   1        /*(5)循环扫描PGA的输出*/ 
+ 298   1        PGACON3Temp = PGACON3;
+ 299   1        
+ 300   1        PGA_Delay();  
+ 301   1        PgaOut = PGA_GetOutValue();
+ 302   1        for(temp=0; temp<0x40; temp++)
+C51 COMPILER V9.52.0.0   PGA                                                               09/06/2023 18:09:43 PAGE 6   
+
+ 303   1        {
+ 304   2          PGACON3Temp &= 0xc0;
+ 305   2          PGACON3Temp |= temp;
+ 306   2          PGACON3 = PGACON3Temp;
+ 307   2          PGA_Delay();
+ 308   2          if( PgaOut != PGA_GetOutValue()) 
+ 309   2          {
+ 310   3            Adjvalue = temp;    /*记录修调值*/ 
+ 311   3            break;
+ 312   3          } 
+ 313   2        }
+ 314   1        /*(6)退出PGA修调模式*/
+ 315   1        PGA_Stop();
+ 316   1        PGACON3 = 0x00;
+ 317   1        return  Adjvalue;
+ 318   1      }
+ 319          
+ 320          
+ 321          
+ 322          
+ 323          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    270    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

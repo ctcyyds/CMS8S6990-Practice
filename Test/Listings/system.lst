@@ -1,0 +1,492 @@
+C51 COMPILER V9.52.0.0   SYSTEM                                                            09/06/2023 18:09:44 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE SYSTEM
+OBJECT MODULE PLACED IN .\Objects\system.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\Lib\system.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Code\CMS;.\Code\Li
+                    -b;.\Code\User;.\Code\Hardware\UART) DEBUG PRINT(.\Listings\system.lst) TABS(2) OBJECT(.\Objects\system.obj)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          * Copyright (C) 2019 China Micro Semiconductor Limited Company. All Rights Reserved.
+   3          *
+   4          * This software is owned and published by:
+   5          * CMS LLC, No 2609-10, Taurus Plaza, TaoyuanRoad, NanshanDistrict, Shenzhen, China.
+   6          *
+   7          * BY DOWNLOADING, INSTALLING OR USING THIS SOFTWARE, YOU AGREE TO BE BOUND
+   8          * BY ALL THE TERMS AND CONDITIONS OF THIS AGREEMENT.
+   9          *
+  10          * This software contains source code for use with CMS
+  11          * components. This software is licensed by CMS to be adapted only
+  12          * for use in systems utilizing CMS components. CMS shall not be
+  13          * responsible for misuse or illegal use of this software for devices not
+  14          * supported herein. CMS is providing this software "AS IS" and will
+  15          * not be responsible for issues arising from incorrect user implementation
+  16          * of the software.
+  17          *
+  18          * This software may be replicated in part or whole for the licensed use,
+  19          * with the restriction that this Disclaimer and Copyright notice must be
+  20          * included with each copy of this software, whether used in part or whole,
+  21          * at all times.
+  22          */
+  23          
+  24          /****************************************************************************/
+  25          /** \file system.c
+  26          **
+  27          **  
+  28          **
+  29          **  History:
+  30          **  
+  31          *****************************************************************************/
+  32          /****************************************************************************/
+  33          /*  include files
+  34          *****************************************************************************/
+  35          #include "system.h"
+  36          
+  37          /****************************************************************************/
+  38          /*  Local pre-processor symbols/macros('#define')
+  39          ****************************************************************************/
+  40          
+  41          /****************************************************************************/
+  42          /*  Global variable definitions(declared in header file with 'extern')
+  43          ****************************************************************************/
+  44          
+  45          /****************************************************************************/
+  46          /*  Local type definitions('typedef')
+  47          ****************************************************************************/
+  48          
+  49          /****************************************************************************/
+  50          /*  Local variable  definitions('static')
+  51          ****************************************************************************/
+  52          
+  53          /****************************************************************************/
+  54          /*  Local function prototypes('static')
+C51 COMPILER V9.52.0.0   SYSTEM                                                            09/06/2023 18:09:44 PAGE 2   
+
+  55          ****************************************************************************/
+  56          
+  57          /****************************************************************************/
+  58          /*  Function implementation - global ('extern') and local('static')
+  59          ****************************************************************************/
+  60          
+  61          /*****************************************************************************
+  62           ** \brief   SYS_EnableLVD
+  63           **      开启电压监测功能
+  64           ** \param [in] none
+  65           ** \return  none
+  66           ** \note  
+  67          *****************************************************************************/
+  68          void SYS_EnableLVD(void)
+  69          {
+  70   1        LVDCON |= LVD_LVDCON_LVDEN_Msk;
+  71   1      }
+  72          /*****************************************************************************
+  73           ** \brief   SYS_DisableLVD
+  74           **       关闭电压监测功能
+  75           ** \param [in] none
+  76           ** \return  none
+  77           ** \note  
+  78          *****************************************************************************/
+  79          void SYS_DisableLVD(void)
+  80          {
+  81   1        LVDCON &= ~(LVD_LVDCON_LVDEN_Msk);  
+  82   1      }
+  83          /*****************************************************************************
+  84           ** \brief   SYS_ConfigLVD
+  85           **      配置系统电压监测电压
+  86           ** \param [in] LVDValue :(1)SYS_LVD_2_0V
+  87           **             (2)SYS_LVD_2_2V
+  88           **             (3)SYS_LVD_2_4V
+  89           **             (4)SYS_LVD_2_7V
+  90           **             (5)SYS_LVD_3_0V
+  91           **             (6)SYS_LVD_3_7V
+  92           **             (7)SYS_LVD_4_0V
+  93           **             (7)SYS_LVD_4_3V
+  94           ** \return  none
+  95           ** \note  
+  96          *****************************************************************************/
+  97          void SYS_ConfigLVD(uint8_t LVDValue)
+  98          {
+  99   1        uint8_t Temp=0;
+ 100   1        
+ 101   1        Temp = LVDCON;
+ 102   1        Temp &= ~(LVD_LVDCON_LVDSEL_Msk);
+ 103   1        Temp |= LVDValue; 
+ 104   1        LVDCON = Temp;  
+ 105   1      }
+ 106          
+ 107          /*****************************************************************************
+ 108           ** \brief   SYS_EnableLVDInt
+ 109           **      开启电压监测中断功能
+ 110           ** \param [in] none
+ 111           ** \return  none
+ 112           ** \note  
+ 113          *****************************************************************************/
+ 114          void SYS_EnableLVDInt(void)
+ 115          {
+ 116   1        LVDCON |= LVD_LVDCON_LVDINTE_Msk; 
+C51 COMPILER V9.52.0.0   SYSTEM                                                            09/06/2023 18:09:44 PAGE 3   
+
+ 117   1      }
+ 118          /*****************************************************************************
+ 119           ** \brief   SYS_DisableLVDInt
+ 120           **       关闭电压监测中断功能
+ 121           ** \param [in] none
+ 122           ** \return  none
+ 123           ** \note  
+ 124          *****************************************************************************/
+ 125          void SYS_DisableLVDInt(void)
+ 126          {
+ 127   1        LVDCON &= ~(LVD_LVDCON_LVDINTE_Msk);  
+ 128   1      }
+ 129          
+ 130          /*****************************************************************************
+ 131           ** \brief   SYS_GetLVDIntFlag
+ 132           **      获取LVD中断标志位
+ 133           ** \param [in] none
+ 134           ** \return  0:无中断 1：有中断
+ 135           ** \note  
+ 136          *****************************************************************************/
+ 137          uint8_t SYS_GetLVDIntFlag(void)
+ 138          {
+ 139   1        return((LVDCON & LVD_LVDCON_LVDINTF_Msk)? 1:0);
+ 140   1      }
+ 141          
+ 142          /*****************************************************************************
+ 143           ** \brief   SYS_ClearLVDIntFlag
+ 144           **      清除LVD中断标志位
+ 145           ** \param [in] none
+ 146           ** \return  none
+ 147           ** \note  
+ 148          *****************************************************************************/
+ 149          void SYS_ClearLVDIntFlag(void)
+ 150          {
+ 151   1        LVDCON  &= ~(LVD_LVDCON_LVDINTF_Msk);
+ 152   1      }
+ 153          
+ 154          
+ 155          /*****************************************************************************
+ 156           ** \brief   SYS_EnableWDTReset
+ 157           **      使能WDT复位System
+ 158           ** \param [in] none
+ 159           **
+ 160           ** \return none
+ 161           ** \note
+ 162           *****************************************************************************/
+ 163          void SYS_EnableWDTReset(void)
+ 164          {
+ 165   1        if(EA==1) //操作TA时序时不允许被打断，因而需要关闭中断
+ 166   1        {
+ 167   2          EA=0;
+ 168   2          TA = 0xAA;
+ 169   2          TA = 0x55;
+ 170   2          WDCON |= WDT_WDCON_WDTRE_Msk;
+ 171   2          EA=1;
+ 172   2        }
+ 173   1        else
+ 174   1        {
+ 175   2          TA = 0xAA;
+ 176   2          TA = 0x55;
+ 177   2          WDCON |= WDT_WDCON_WDTRE_Msk;
+ 178   2        }
+C51 COMPILER V9.52.0.0   SYSTEM                                                            09/06/2023 18:09:44 PAGE 4   
+
+ 179   1      }
+ 180          /*****************************************************************************
+ 181           ** \brief   SYS_DisableWDTReset
+ 182           **      关闭WDT复位System
+ 183           ** \param [in] none
+ 184           **
+ 185           ** \return none
+ 186           ** \note
+ 187           *****************************************************************************/
+ 188          void SYS_DisableWDTReset(void)
+ 189          {
+ 190   1        if(EA==1) //操作TA时序时不允许被打断，因而需要关闭中断
+ 191   1        {
+ 192   2          EA=0;
+ 193   2          TA = 0xAA;
+ 194   2          TA = 0x55;
+ 195   2          WDCON &= ~(WDT_WDCON_WDTRE_Msk);
+ 196   2          EA=1;
+ 197   2        }
+ 198   1        else
+ 199   1        {
+ 200   2          TA = 0xAA;
+ 201   2          TA = 0x55;
+ 202   2          WDCON &= ~(WDT_WDCON_WDTRE_Msk);
+ 203   2        }
+ 204   1      }
+ 205          /*****************************************************************************
+ 206           ** \brief   SYS_GetWDTResetFlag
+ 207           **      获取WDT复位System的标志
+ 208           ** \param [in] none
+ 209           **
+ 210           ** \return 0：复位不由WDT溢出引起    1：复位由WDT溢出引起
+ 211           ** \note
+ 212           *****************************************************************************/
+ 213          uint8_t SYS_GetWDTResetFlag(void)
+ 214          {
+ 215   1        return((WDCON & WDT_WDCON_WDTRF_Msk)? 1:0);
+ 216   1      }
+ 217          /*****************************************************************************
+ 218           ** \brief   SYS_ClearWDTResetFlag
+ 219           **      清除WDT复位System的标志
+ 220           ** \param [in] none
+ 221           **
+ 222           ** \return   none
+ 223           ** \note
+ 224           *****************************************************************************/
+ 225          void SYS_ClearWDTResetFlag(void)
+ 226          {
+ 227   1        if(EA==1) //操作TA时序时不允许被打断，因而需要关闭中断
+ 228   1        {
+ 229   2          EA=0;
+ 230   2          TA = 0xAA;
+ 231   2          TA = 0x55;
+ 232   2          WDCON &= ~(WDT_WDCON_WDTRF_Msk);  
+ 233   2          EA=1;
+ 234   2        }
+ 235   1        else
+ 236   1        {
+ 237   2          TA = 0xAA;
+ 238   2          TA = 0x55;
+ 239   2          WDCON &= ~(WDT_WDCON_WDTRF_Msk);
+ 240   2      
+C51 COMPILER V9.52.0.0   SYSTEM                                                            09/06/2023 18:09:44 PAGE 5   
+
+ 241   2        }
+ 242   1      }
+ 243          
+ 244          /*****************************************************************************
+ 245           ** \brief   SYS_EnableSoftwareReset
+ 246           **      使能软件复位System
+ 247           ** \param [in] none
+ 248           **
+ 249           ** \return none
+ 250           ** \note
+ 251           *****************************************************************************/
+ 252          void SYS_EnableSoftwareReset(void)
+ 253          {
+ 254   1        if(EA==1) //操作TA时序时不允许被打断，因而需要关闭中断
+ 255   1        {
+ 256   2          EA=0;
+ 257   2          TA = 0xAA;
+ 258   2          TA = 0x55;
+ 259   2          WDCON |= WDT_WDCON_SWRST_Msk; 
+ 260   2          EA=1;
+ 261   2        }
+ 262   1        else
+ 263   1        {
+ 264   2          TA = 0xAA;
+ 265   2          TA = 0x55;
+ 266   2          WDCON |= WDT_WDCON_SWRST_Msk; 
+ 267   2        }
+ 268   1      }
+ 269          /*****************************************************************************
+ 270           ** \brief   SYS_DisableSoftwareReset
+ 271           **      关闭软件复位System
+ 272           ** \param [in] none
+ 273           **
+ 274           ** \return none
+ 275           ** \note
+ 276           *****************************************************************************/
+ 277          void SYS_DisableSoftwareReset(void)
+ 278          {
+ 279   1        if(EA==1) //操作TA时序时不允许被打断，因而需要关闭中断
+ 280   1        {
+ 281   2          EA=0;
+ 282   2          TA = 0xAA;
+ 283   2          TA = 0x55;
+ 284   2          WDCON &= ~(WDT_WDCON_SWRST_Msk);  
+ 285   2          EA=1;
+ 286   2        }
+ 287   1        else
+ 288   1        {
+ 289   2          TA = 0xAA;
+ 290   2          TA = 0x55;
+ 291   2          WDCON &= ~(WDT_WDCON_SWRST_Msk);  
+ 292   2        }
+ 293   1      }
+ 294          /*****************************************************************************
+ 295           ** \brief   SYS_GetPowerOnResetFlag
+ 296           **      获取上电复位System的标志
+ 297           ** \param [in] none
+ 298           **
+ 299           ** \return   0：复位不由上电复位引起    1：复位由上电复位引起
+ 300           ** \note
+ 301           *****************************************************************************/
+ 302          uint8_t SYS_GetPowerOnResetFlag(void)
+C51 COMPILER V9.52.0.0   SYSTEM                                                            09/06/2023 18:09:44 PAGE 6   
+
+ 303          {
+ 304   1        return((WDCON & WDT_WDCON_PORF_Msk)? 1:0);
+ 305   1      }
+ 306          /*****************************************************************************
+ 307           ** \brief   SYS_ClearPowerOnResetFlag
+ 308           **      清除PowerOn复位System的标志
+ 309           ** \param [in] none
+ 310           **
+ 311           ** \return   none
+ 312           ** \note
+ 313           *****************************************************************************/
+ 314          void SYS_ClearPowerOnResetFlag(void)
+ 315          {
+ 316   1        WDCON &= ~(WDT_WDCON_PORF_Msk); 
+ 317   1      }
+ 318          
+ 319          
+ 320          /*****************************************************************************
+ 321           ** \brief   SYS_EnableWakeUp
+ 322           **      使能休眠唤醒
+ 323           ** \param [in] none
+ 324           **
+ 325           ** \return none
+ 326           ** \note  可由外部中断、GPIO中断唤醒
+ 327           *****************************************************************************/
+ 328          void SYS_EnableWakeUp(void)
+ 329          {
+ 330   1        PCON |= SYS_PCON_SWE_Msk;
+ 331   1      }
+ 332          /*****************************************************************************
+ 333           ** \brief   SYS_EnableWakeUp
+ 334           **      关闭休眠唤醒
+ 335           ** \param [in] none
+ 336           **
+ 337           ** \return none
+ 338           ** \note 只能由外部复位或者LVR复位唤醒
+ 339           *****************************************************************************/
+ 340          void SYS_DisableWakeUp(void)
+ 341          {
+ 342   1        PCON &= ~(SYS_PCON_SWE_Msk);
+ 343   1      }
+ 344          
+ 345          /*****************************************************************************
+ 346           ** \brief   SYS_EnterStop
+ 347           **      进入休眠中STOP状态
+ 348           ** \param [in] none
+ 349           **
+ 350           ** \return none
+ 351           ** \note 
+ 352           *****************************************************************************/
+ 353          void SYS_EnterStop(void)
+ 354          { 
+ 355   1        _nop_();
+ 356   1        _nop_();
+ 357   1        PCON |= SYS_PCON_STOP_Msk;
+ 358   1        _nop_();  
+ 359   1        _nop_();
+ 360   1        _nop_();
+ 361   1        _nop_();
+ 362   1        _nop_();
+ 363   1        _nop_();  
+ 364   1      }
+C51 COMPILER V9.52.0.0   SYSTEM                                                            09/06/2023 18:09:44 PAGE 7   
+
+ 365          /*****************************************************************************
+ 366           ** \brief   SYS_EnterIdle
+ 367           **      进入休眠模式中Idle状态
+ 368           ** \param [in] none
+ 369           **
+ 370           ** \return none
+ 371           ** \note   
+ 372           *****************************************************************************/
+ 373          void SYS_EnterIdle(void)
+ 374          {
+ 375   1        _nop_();
+ 376   1        _nop_();
+ 377   1        PCON |= SYS_PCON_IDLE_Msk;
+ 378   1        _nop_();  
+ 379   1        _nop_();
+ 380   1        _nop_();
+ 381   1        _nop_();
+ 382   1        _nop_();
+ 383   1        _nop_();
+ 384   1      }
+ 385          
+ 386          /*****************************************************************************
+ 387           ** \brief   SYS_EnableWakeUpTrig
+ 388           **      使能定时唤醒功能
+ 389           ** \param [in] none
+ 390           **
+ 391           ** \return none
+ 392           ** \note   
+ 393           *****************************************************************************/
+ 394          void SYS_EnableWakeUpTrig(void)
+ 395          {
+ 396   1        WUTCRH |= (1<<7);
+ 397   1      
+ 398   1      }
+ 399          /*****************************************************************************
+ 400           ** \brief   SYS_DisableWakeUpTrig
+ 401           **      关闭定时唤醒功能
+ 402           ** \param [in] none
+ 403           **
+ 404           ** \return none
+ 405           ** \note   
+ 406           *****************************************************************************/
+ 407          void SYS_DisableWakeUpTrig(void)
+ 408          {
+ 409   1        WUTCRH &= ~(1<<7);
+ 410   1      }
+ 411          
+ 412          /*****************************************************************************
+ 413           ** \brief   SYS_ConfigWUTCLK
+ 414           **     设置定时唤醒时钟
+ 415           ** \param [in] clkdiv: (1)WUT_CLK_DIV_1 
+ 416           **           (2)WUT_CLK_DIV_8
+ 417           **           (2)WUT_CLK_DIV_32
+ 418          **            (2)WUT_CLK_DIV_256
+ 419           ** \return none
+ 420           ** \note   
+ 421           *****************************************************************************/
+ 422          void SYS_ConfigWUTCLK(uint8_t clkdiv )
+ 423          {
+ 424   1        uint8_t Temp=0;
+ 425   1        
+ 426   1        Temp = WUTCRH;
+C51 COMPILER V9.52.0.0   SYSTEM                                                            09/06/2023 18:09:44 PAGE 8   
+
+ 427   1        Temp &= ~(0x3<<4);
+ 428   1        Temp |= (clkdiv<<4);
+ 429   1        WUTCRH = Temp;  
+ 430   1      }
+ 431          
+ 432          /*****************************************************************************
+ 433           ** \brief   SYS_ConfigWUTTime
+ 434           **     设置定时唤醒时间
+ 435           ** \param [in] time: 12it（0x0 ~ 0xFFF）
+ 436           ** \return none
+ 437           ** \note   
+ 438           *****************************************************************************/
+ 439          void SYS_ConfigWUTTime(uint16_t time )
+ 440          {
+ 441   1        uint8_t Temp=0;
+ 442   1        
+ 443   1        Temp = WUTCRH;
+ 444   1        Temp &=0xf0;
+ 445   1        Temp |= time>>8;
+ 446   1        WUTCRH = Temp;
+ 447   1        
+ 448   1        WUTCRL = time;
+ 449   1      }
+ 450          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    296    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

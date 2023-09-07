@@ -1,0 +1,198 @@
+C51 COMPILER V9.52.0.0   EXTINT                                                            09/06/2023 18:09:42 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE EXTINT
+OBJECT MODULE PLACED IN .\Objects\extint.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\Lib\extint.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Code\CMS;.\Code\Li
+                    -b;.\Code\User;.\Code\Hardware\UART) DEBUG PRINT(.\Listings\extint.lst) TABS(2) OBJECT(.\Objects\extint.obj)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          * Copyright (C) 2019 China Micro Semiconductor Limited Company. All Rights Reserved.
+   3          *
+   4          * This software is owned and published by:
+   5          * CMS LLC, No 2609-10, Taurus Plaza, TaoyuanRoad, NanshanDistrict, Shenzhen, China.
+   6          *
+   7          * BY DOWNLOADING, INSTALLING OR USING THIS SOFTWARE, YOU AGREE TO BE BOUND
+   8          * BY ALL THE TERMS AND CONDITIONS OF THIS AGREEMENT.
+   9          *
+  10          * This software contains source code for use with CMS
+  11          * components. This software is licensed by CMS to be adapted only
+  12          * for use in systems utilizing CMS components. CMS shall not be
+  13          * responsible for misuse or illegal use of this software for devices not
+  14          * supported herein. CMS is providing this software "AS IS" and will
+  15          * not be responsible for issues arising from incorrect user implementation
+  16          * of the software.
+  17          *
+  18          * This software may be replicated in part or whole for the licensed use,
+  19          * with the restriction that this Disclaimer and Copyright notice must be
+  20          * included with each copy of this software, whether used in part or whole,
+  21          * at all times.
+  22          */
+  23          
+  24          /****************************************************************************/
+  25          /** \file extit.c
+  26          **
+  27          **  
+  28          **
+  29          **  History:
+  30          **  
+  31          *****************************************************************************/
+  32          /****************************************************************************/
+  33          /*  include files
+  34          *****************************************************************************/
+  35          #include "extint.h"
+  36          
+  37          /****************************************************************************/
+  38          /*  Local pre-processor symbols/macros('#define')
+  39          ****************************************************************************/
+  40          
+  41          /****************************************************************************/
+  42          /*  Global variable definitions(declared in header file with 'extern')
+  43          ****************************************************************************/
+  44          
+  45          /****************************************************************************/
+  46          /*  Local type definitions('typedef')
+  47          ****************************************************************************/
+  48          
+  49          /****************************************************************************/
+  50          /*  Local variable  definitions('static')
+  51          ****************************************************************************/
+  52          
+  53          /****************************************************************************/
+  54          /*  Local function prototypes('static')
+C51 COMPILER V9.52.0.0   EXTINT                                                            09/06/2023 18:09:42 PAGE 2   
+
+  55          ****************************************************************************/
+  56          
+  57          /****************************************************************************/
+  58          /*  Function implementation - global ('extern') and local('static')
+  59          ****************************************************************************/
+  60          /********************************************************************************
+  61           ** \brief   EXTINT_ConfigInt
+  62           **      配置外部中断功能
+  63           ** \param [in]  Extintn : (1)EXTINT0     :外部中断0
+  64           **                   (2)EXTINT1     :外部中断1
+  65           **          IntMode  ：(1)EXTINT_TRIG_LOW  :低电平触发模式
+  66           **             (2)EXTINT_TRIG_FALLING :下降沿触发模式
+  67           ** \return  none
+  68           ** \note  
+  69           ******************************************************************************/
+  70          void EXTINT_ConfigInt(uint8_t Extintn, uint8_t IntMode)
+  71          {
+  72   1        if( EXTINT0 == Extintn)
+  73   1        {
+  74   2          if(EXTINT_TRIG_LOW == IntMode)
+  75   2            IT0 = 0;
+  76   2          if(EXTINT_TRIG_FALLING == IntMode)
+  77   2            IT0 = 1;
+  78   2        }
+  79   1        if( EXTINT1 == Extintn)
+  80   1        {
+  81   2          if(EXTINT_TRIG_LOW == IntMode)
+  82   2            IT1 = 0;
+  83   2          if(EXTINT_TRIG_FALLING == IntMode)
+  84   2            IT1 = 1;
+  85   2        }
+  86   1      }
+  87          /********************************************************************************
+  88           ** \brief   EXTINT_EnableInt
+  89           **      使能外部中断功能
+  90           ** \param [in]  Extintn : (1)EXTINT0     :外部中断0
+  91           **                   (2)EXTINT1     :外部中断1
+  92           ** \return  none
+  93           ** \note   
+  94           ******************************************************************************/
+  95          void EXTINT_EnableInt(uint8_t Extintn)
+  96          { 
+  97   1        if( EXTINT0 == Extintn)
+  98   1        {
+  99   2          EX0 =1; 
+ 100   2        }
+ 101   1        if( EXTINT1 == Extintn)
+ 102   1        {
+ 103   2          EX1 =1; 
+ 104   2        }
+ 105   1      }
+ 106          /********************************************************************************
+ 107           ** \brief   EXTINT_DisableInt
+ 108           **      关闭外部中断功能
+ 109           ** \param [in]  Extintn : (1)EXTINT0     :外部中断0
+ 110           **                   (2)EXTINT1     :外部中断1
+ 111           ** \return  none
+ 112           ** \note   
+ 113           ******************************************************************************/
+ 114          void EXTINT_DisableInt(uint8_t Extintn)
+ 115          {
+ 116   1        if( EXTINT0 == Extintn)
+C51 COMPILER V9.52.0.0   EXTINT                                                            09/06/2023 18:09:42 PAGE 3   
+
+ 117   1        {
+ 118   2          EX0 =0;
+ 119   2        }
+ 120   1        if( EXTINT1 == Extintn)
+ 121   1        {
+ 122   2          EX1 =0;
+ 123   2        }
+ 124   1      }
+ 125          /********************************************************************************
+ 126           ** \brief   EXTINT_GetIntFlag
+ 127           **      获取中断标志
+ 128           ** \param [in]  Extintn : (1)EXTINT0     :外部中断0
+ 129           **                   (2)EXTINT1     :外部中断1  
+ 130           ** \return  0:无中断1：有中断
+ 131           ** \note  
+ 132           ******************************************************************************/
+ 133          uint8_t  EXTINT_GetIntFlag(uint8_t Extintn)
+ 134          {
+ 135   1        if(EXTINT0 == Extintn)
+ 136   1        {
+ 137   2          return((TCON & TMR_TCON_IE0_Msk)? 1:0);
+ 138   2        }
+ 139   1        if(EXTINT1 == Extintn)
+ 140   1        {
+ 141   2          return((TCON & TMR_TCON_IE1_Msk)? 1:0); 
+ 142   2        }
+ 143   1        return 0;
+ 144   1      }
+ 145           /********************************************************************************
+ 146           ** \brief   EXTINT_ClearIntFlag
+ 147           **      清中断标志
+ 148           ** \param [in]  Extintn : (1)EXTINT0     :外部中断0
+ 149           **                   (2)EXTINT1     :外部中断1  
+ 150           ** \return  none
+ 151           ** \note   
+ 152           ******************************************************************************/
+ 153          void EXTINT_ClearIntFlag(uint8_t Extintn)
+ 154          {
+ 155   1        if(EXTINT0 == Extintn)
+ 156   1        {
+ 157   2          IE0 =0;
+ 158   2        }
+ 159   1        if(EXTINT1 == Extintn)
+ 160   1        {
+ 161   2          IE1 =0;
+ 162   2        } 
+ 163   1      }
+ 164          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     91    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+C51 COMPILER V9.52.0.0   EXTINT                                                            09/06/2023 18:09:42 PAGE 4   
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

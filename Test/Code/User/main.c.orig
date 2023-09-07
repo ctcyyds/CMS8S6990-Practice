@@ -1,0 +1,19 @@
+#include "cms8s6990.h"
+#include "Test_Uart.h"
+#include <stdio.h>
+#include "string.h"
+
+uint32_t SystemClock = 24000000;
+
+int main(void)
+{
+    UART_Config();
+
+   UART_ISR_Config();
+
+    while (1)
+    {
+        // printf("Äã»¹ºÃÂðworld!001\r\n");
+    }
+
+}

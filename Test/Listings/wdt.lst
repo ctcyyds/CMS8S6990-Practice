@@ -1,0 +1,213 @@
+C51 COMPILER V9.52.0.0   WDT                                                               09/06/2023 18:09:44 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE WDT
+OBJECT MODULE PLACED IN .\Objects\wdt.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\Lib\wdt.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Code\CMS;.\Code\Lib;.
+                    -\Code\User;.\Code\Hardware\UART) DEBUG PRINT(.\Listings\wdt.lst) TABS(2) OBJECT(.\Objects\wdt.obj)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          * Copyright (C) 2019 China Micro Semiconductor Limited Company. All Rights Reserved.
+   3          *
+   4          * This software is owned and published by:
+   5          * CMS LLC, No 2609-10, Taurus Plaza, TaoyuanRoad, NanshanDistrict, Shenzhen, China.
+   6          *
+   7          * BY DOWNLOADING, INSTALLING OR USING THIS SOFTWARE, YOU AGREE TO BE BOUND
+   8          * BY ALL THE TERMS AND CONDITIONS OF THIS AGREEMENT.
+   9          *
+  10          * This software contains source code for use with CMS
+  11          * components. This software is licensed by CMS to be adapted only
+  12          * for use in systems utilizing CMS components. CMS shall not be
+  13          * responsible for misuse or illegal use of this software for devices not
+  14          * supported herein. CMS is providing this software "AS IS" and will
+  15          * not be responsible for issues arising from incorrect user implementation
+  16          * of the software.
+  17          *
+  18          * This software may be replicated in part or whole for the licensed use,
+  19          * with the restriction that this Disclaimer and Copyright notice must be
+  20          * included with each copy of this software, whether used in part or whole,
+  21          * at all times.
+  22          */
+  23          
+  24          /****************************************************************************/
+  25          /** \file wdt.c
+  26          **
+  27          **  
+  28          **
+  29          **  History:
+  30          **
+  31          *****************************************************************************/
+  32          /****************************************************************************/
+  33          /*  include files
+  34          *****************************************************************************/
+  35          #include "wdt.h"
+  36          
+  37          /****************************************************************************/
+  38          /*  Local pre-processor symbols/macros('#define')
+  39          ****************************************************************************/
+  40          
+  41          /****************************************************************************/
+  42          /*  Global variable definitions(declared in header file with 'extern')
+  43          ****************************************************************************/
+  44          
+  45          /****************************************************************************/
+  46          /*  Local type definitions('typedef')
+  47          ****************************************************************************/
+  48          
+  49          /****************************************************************************/
+  50          /*  Local variable  definitions('static')
+  51          ****************************************************************************/
+  52          
+  53          /****************************************************************************/
+  54          /*  Local function prototypes('static')
+C51 COMPILER V9.52.0.0   WDT                                                               09/06/2023 18:09:44 PAGE 2   
+
+  55          ****************************************************************************/
+  56          
+  57          /****************************************************************************/
+  58          /*  Function implementation - global ('extern') and local('static')
+  59          ****************************************************************************/
+  60           /*****************************************************************************
+  61           ** \brief   WDT_ConfigOverflowTime
+  62           **     设置WDT溢出时间
+  63           ** \param [in] TsysCoefficient : (1)WDT_CLK_131072   
+  64           **                 (2)WDT_CLK_262144 
+  65           **                 (3)WDT_CLK_524288
+  66           **                 (4)WDT_CLK_1048576 
+  67           **                 (5)WDT_CLK_2097152 
+  68           **                 (6)WDT_CLK_4194304 
+  69           **                 (7)WDT_CLK_16777216 
+  70           **                 (8)WDT_CLK_67108864 
+  71           ** \return none 
+  72           ** \note 若Fsys =16Mhz, 则     (1)WDT_CLK_131072  , 溢出时间= Tsys * 131072 = 8.192ms
+  73           **                 (2)WDT_CLK_262144 , 溢出时间= Tsys * 262144 = 16.384ms
+  74           **                 (3)WDT_CLK_524288 , 溢出时间= Tsys * 524288 = 32.768ms
+  75           **                 (4)WDT_CLK_1048576 , 溢出时间= Tsys * 1048576 = 65.536ms
+  76           **                 (5)WDT_CLK_2097152 , 溢出时间= Tsys * 2097152 = 131.072ms
+  77           **                 (6)WDT_CLK_4194304 , 溢出时间= Tsys * 4194304 = 262.144ms
+  78           **                 (7)WDT_CLK_16777216 , 溢出时间= Tsys * 16777216 = 1.048s 
+  79           **                 (8)WDT_CLK_67108864 , 溢出时间= Tsys * 67108864 = 4.194s 
+  80           *****************************************************************************/
+  81          void  WDT_ConfigOverflowTime(uint8_t TsysCoefficient)
+  82          {
+  83   1        uint8_t Temp=0;
+  84   1        
+  85   1        Temp = CKCON;
+  86   1        Temp &= ~(TMR_CKCON_WTSn_Msk);
+  87   1        Temp |= (TsysCoefficient << TMR_CKCON_WTSn_Pos);
+  88   1        CKCON = Temp;
+  89   1      }
+  90          /*****************************************************************************
+  91           ** \brief   WDT_ClearWDT
+  92           **     清除WDT计数器
+  93           ** \param [in] none
+  94           **
+  95           ** \return none 
+  96           ** \note
+  97           *****************************************************************************/
+  98          void WDT_ClearWDT(void)
+  99          {
+ 100   1        if(1 == EA)
+ 101   1        {
+ 102   2          EA = 0;
+ 103   2          TA = 0xAA;
+ 104   2          TA = 0x55;
+ 105   2          WDCON |= WDT_WDCON_WDTCLR_Msk;  
+ 106   2          EA = 1;
+ 107   2        }
+ 108   1        else
+ 109   1        {
+ 110   2          TA = 0xAA;
+ 111   2          TA = 0x55;
+ 112   2          WDCON |= WDT_WDCON_WDTCLR_Msk;    
+ 113   2        } 
+ 114   1      }
+ 115          /*****************************************************************************
+ 116           ** \brief   WDT_EnableOverflowInt
+C51 COMPILER V9.52.0.0   WDT                                                               09/06/2023 18:09:44 PAGE 3   
+
+ 117           **      使能WDT计数溢出中断
+ 118           ** \param [in] none
+ 119           **
+ 120           ** \return none 
+ 121           ** \note
+ 122           *****************************************************************************/
+ 123          void WDT_EnableOverflowInt(void)
+ 124          {
+ 125   1        EIE2 |= IRQ_EIE2_WDTIE_Msk;
+ 126   1      }
+ 127          /*****************************************************************************
+ 128           ** \brief   WDT_EnableOverflowInt
+ 129           **      关闭WDT计数溢出中断
+ 130           ** \param [in] none
+ 131           **
+ 132           ** \return none 
+ 133           ** \note
+ 134           *****************************************************************************/
+ 135           void WDT_DisableOverflowInt(void)
+ 136           {
+ 137   1        EIE2 &= ~(IRQ_EIE2_WDTIE_Msk);
+ 138   1       }
+ 139          /*****************************************************************************
+ 140           ** \brief   WDT_GetOverflowIntFlag
+ 141           **      获取WDT计数溢出中断标志
+ 142           ** \param [in] none
+ 143           **
+ 144           ** \return 0：无中断，1：有中断
+ 145           ** \note
+ 146           *****************************************************************************/
+ 147          uint8_t WDT_GetOverflowIntFlag(void)
+ 148          {
+ 149   1        return ((WDCON & WDT_WDCON_WDTIF_Msk)? 1:0);
+ 150   1      }
+ 151          /*****************************************************************************
+ 152           ** \brief   WDT_ClearOverflowIntFlag
+ 153           **      清除WDT计数溢出中断标志
+ 154           ** \param [in] none
+ 155           **
+ 156           ** \return 0：无中断，1：有中断
+ 157           ** \note
+ 158           *****************************************************************************/
+ 159          void WDT_ClearOverflowIntFlag(void)
+ 160          {
+ 161   1        if(EA==1) //操作TA时序时不允许被打断，因而需要关闭中断
+ 162   1        {
+ 163   2          EA=0;
+ 164   2          TA = 0xAA;
+ 165   2          TA = 0x55;
+ 166   2          WDCON &= ~(WDT_WDCON_WDTIF_Msk);
+ 167   2          EA=1;
+ 168   2        }
+ 169   1        else
+ 170   1        {
+ 171   2          TA = 0xAA;
+ 172   2          TA = 0x55;
+ 173   2          WDCON &= ~(WDT_WDCON_WDTIF_Msk);
+ 174   2        }
+ 175   1      }
+ 176          
+ 177          
+ 178          
+C51 COMPILER V9.52.0.0   WDT                                                               09/06/2023 18:09:44 PAGE 4   
+
+ 179          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     87    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

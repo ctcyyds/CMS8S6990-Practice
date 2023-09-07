@@ -1,0 +1,27 @@
+".\Objects\main.obj",
+".\Objects\isr.obj",
+".\Objects\uart.obj",
+".\Objects\acmp.obj",
+".\Objects\adc.obj",
+".\Objects\buzzer.obj",
+".\Objects\epwm.obj",
+".\Objects\extint.obj",
+".\Objects\flash.obj",
+".\Objects\gpio.obj",
+".\Objects\i2c.obj",
+".\Objects\lse.obj",
+".\Objects\opa.obj",
+".\Objects\pga.obj",
+".\Objects\spi.obj",
+".\Objects\system.obj",
+".\Objects\timer.obj",
+".\Objects\wdt.obj",
+".\Objects\startup_cms8s6990.obj",
+".\Objects\Test_Uart.obj",
+".\Objects\Test_LED.obj",
+".\Objects\Test_timer.obj",
+".\Objects\Test_Epwm.obj",
+".\Objects\delay.obj" 
+TO ".\Objects\project" 
+
+PRINT(".\Listings\project.map")

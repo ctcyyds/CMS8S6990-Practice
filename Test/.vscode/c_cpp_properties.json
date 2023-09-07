@@ -1,0 +1,77 @@
+{
+    "configurations": [
+        {
+            "name": "Project",
+            "includePath": [
+                "c:\\Users\\1\\Desktop\\Test\\Code\\CMS",
+                "c:\\Users\\1\\Desktop\\Test\\Code\\Lib",
+                "c:\\Users\\1\\Desktop\\Test\\Code\\User",
+                "c:\\Users\\1\\Desktop\\Test\\Code\\Hardware\\UART"
+            ],
+            "defines": [
+                "__C51__",
+                "__VSCODE_C51__",
+                "reentrant=",
+                "compact=",
+                "small=",
+                "large=",
+                "data=",
+                "idata=",
+                "pdata=",
+                "bdata=",
+                "xdata=",
+                "code=",
+                "bit=char",
+                "sbit=char",
+                "sfr=char",
+                "sfr16=int",
+                "sfr32=int",
+                "interrupt=",
+                "using=",
+                "_at_=",
+                "_priority_=",
+                "_task_="
+            ],
+            "intelliSenseMode": "${default}"
+        },
+        {
+            "name": "CMS8S6990SS24",
+            "includePath": [
+                "c:\\Users\\1\\Desktop\\Test\\Code\\CMS",
+                "c:\\Users\\1\\Desktop\\Test\\Code\\Lib",
+                "c:\\Users\\1\\Desktop\\Test\\Code\\User",
+                "c:\\Users\\1\\Desktop\\Test\\Code\\Hardware\\UART",
+                "c:\\Users\\1\\Desktop\\Test\\Code\\Hardware\\LED",
+                "c:\\Users\\1\\Desktop\\Test\\Code\\Hardware\\TIMER",
+                "c:\\Users\\1\\Desktop\\Test\\Code\\Hardware\\EPWM",
+                "c:\\Users\\1\\Desktop\\Test\\Code\\Hardware\\DELAY"
+            ],
+            "defines": [
+                "__C51__",
+                "__VSCODE_C51__",
+                "reentrant=",
+                "compact=",
+                "small=",
+                "large=",
+                "data=",
+                "idata=",
+                "pdata=",
+                "bdata=",
+                "xdata=",
+                "code=",
+                "bit=char",
+                "sbit=char",
+                "sfr=char",
+                "sfr16=int",
+                "sfr32=int",
+                "interrupt=",
+                "using=",
+                "_at_=",
+                "_priority_=",
+                "_task_="
+            ],
+            "intelliSenseMode": "${default}"
+        }
+    ],
+    "version": 4
+}

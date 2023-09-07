@@ -1,0 +1,53 @@
+C51 COMPILER V9.52.0.0   MAIN                                                              09/06/2023 18:09:41 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\User\main.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Code\CMS;.\Code\Lib
+                    -;.\Code\User;.\Code\Hardware\UART) DEBUG PRINT(.\Listings\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include "../User/All_include.h"
+   2          
+   3          uint32_t SystemClock = 24000000;
+   4          
+   5          int main(void)
+   6          {
+   7   1          // 串口初始化
+   8   1          UART_Config(UART0);
+   9   1          // 串口中断优先级
+  10   1          // UART_ISR_Config(UART0, IRQ_UART0);
+  11   1      
+  12   1          EPWM_Config();
+  13   1      
+  14   1          GPIO_SET_MUX_MODE(P04CFG, GPIO_MUX_GPIO);
+  15   1          GPIO_ENABLE_OUTPUT(P0TRIS, GPIO_PIN_4);
+  16   1          
+  17   1          P04 = 0;
+  18   1          // LED显示
+  19   1          // LED_Run();
+  20   1      
+  21   1          while (1)
+  22   1          {
+  23   2              // printf("你还好吗world!001\r\n");
+  24   2          }
+  25   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     20    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

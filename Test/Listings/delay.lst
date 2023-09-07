@@ -1,0 +1,83 @@
+C51 COMPILER V9.52.0.0   DELAY                                                             09/06/2023 18:09:45 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE DELAY
+OBJECT MODULE PLACED IN .\Objects\delay.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\Hardware\DELAY\delay.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Code\CMS
+                    -;.\Code\Lib;.\Code\User;.\Code\Hardware\UART) DEBUG PRINT(.\Listings\delay.lst) TABS(2) OBJECT(.\Objects\delay.obj)
+
+line level    source
+
+   1          #include "../User/All_include.h"
+   2          
+   3          #if 0
+              void delay(unsigned int ms)
+              {
+                  unsigned int i;
+                  TH0 = 0x00;
+                  TL0 = 0x00;
+                  TMOD = 0x01;
+                  TR0 = 1;
+              
+                  for (i = 0; i < ms; i++)
+                  {
+                      while (!TF0)
+                      {
+                          TF0 = 0;
+                          TH0 = 0xFC;
+                          TL0 = 0x38;
+                      }
+                      TR0 = 0;
+                  }
+              }
+              #else
+  24          /**
+  25           * @brief 使用Timer0的延时函数
+  26           * TH0  Timer0数据寄存器高位
+  27           * TL0  Timer0数据寄存器低位
+  28           * TR0  Timer0运行控制位（1启动 0关闭）
+  29           * TF0  Timer0计数器溢出中断标志位（
+  30           * 1 Timer0计数器溢出，进入中断服务程序时硬件自动清零，也可软件清零
+  31           * 0 Timer0计数器无溢出
+  32           * ）
+  33           *
+  34           * @param ms
+  35           */
+  36          void delay_ms(unsigned int ms)
+  37          {
+  38   1          unsigned int i, j;
+  39   1          for (i = 0; i < ms; i++)
+  40   1          {
+  41   2              for (j = 0; j < 37; j++)
+  42   2              {
+  43   3                  TH0 = 0xFC;
+  44   3                  TL0 = 0x18;
+  45   3                  TR0 = 1;
+  46   3                  while (!TF0)
+  47   3                      ;
+  48   3                  TR0 = 0;
+  49   3                  TF0 = 0;
+  50   3              }
+  51   2          }
+  52   1      }
+  53          #endif
+
+C51 COMPILER V9.52.0.0   DELAY                                                             09/06/2023 18:09:45 PAGE 2   
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     47    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

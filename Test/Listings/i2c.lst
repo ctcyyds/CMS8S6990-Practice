@@ -1,0 +1,244 @@
+C51 COMPILER V9.52.0.0   I2C                                                               09/06/2023 18:09:43 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE I2C
+OBJECT MODULE PLACED IN .\Objects\i2c.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\Lib\i2c.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Code\CMS;.\Code\Lib;.
+                    -\Code\User;.\Code\Hardware\UART) DEBUG PRINT(.\Listings\i2c.lst) TABS(2) OBJECT(.\Objects\i2c.obj)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          * Copyright (C) 2019 China Micro Semiconductor Limited Company. All Rights Reserved.
+   3          *
+   4          * This software is owned and published by:
+   5          * CMS LLC, No 2609-10, Taurus Plaza, TaoyuanRoad, NanshanDistrict, Shenzhen, China.
+   6          *
+   7          * BY DOWNLOADING, INSTALLING OR USING THIS SOFTWARE, YOU AGREE TO BE BOUND
+   8          * BY ALL THE TERMS AND CONDITIONS OF THIS AGREEMENT.
+   9          *
+  10          * This software contains source code for use with CMS
+  11          * components. This software is licensed by CMS to be adapted only
+  12          * for use in systems utilizing CMS components. CMS shall not be
+  13          * responsible for misuse or illegal use of this software for devices not
+  14          * supported herein. CMS is providing this software "AS IS" and will
+  15          * not be responsible for issues arising from incorrect user implementation
+  16          * of the software.
+  17          *
+  18          * This software may be replicated in part or whole for the licensed use,
+  19          * with the restriction that this Disclaimer and Copyright notice must be
+  20          * included with each copy of this software, whether used in part or whole,
+  21          * at all times.
+  22          */
+  23          
+  24          /****************************************************************************/
+  25          /** \file i2c.c
+  26          **
+  27          ** 
+  28          **
+  29          **  History:
+  30          **  
+  31          *****************************************************************************/
+  32          /****************************************************************************/
+  33          /*  include files
+  34          *****************************************************************************/
+  35          #include "i2c.h"
+  36          
+  37          /****************************************************************************/
+  38          /*  Local pre-processor symbols/macros('#define')
+  39          ****************************************************************************/
+  40          
+  41          /****************************************************************************/
+  42          /*  Global variable definitions(declared in header file with 'extern')
+  43          ****************************************************************************/
+  44          
+  45          /****************************************************************************/
+  46          /*  Local type definitions('typedef')
+  47          ****************************************************************************/
+  48          
+  49          /****************************************************************************/
+  50          /*  Local variable  definitions('static')
+  51          ****************************************************************************/
+  52          
+  53          /****************************************************************************/
+  54          /*  Local function prototypes('static')
+C51 COMPILER V9.52.0.0   I2C                                                               09/06/2023 18:09:43 PAGE 2   
+
+  55          ****************************************************************************/
+  56          
+  57          /****************************************************************************/
+  58          /*  Function implementation - global ('extern') and local('static')
+  59          ****************************************************************************/
+  60          /*****************************************************************************
+  61           ** \brief  I2C_ConfigCLK
+  62           **     配置I2C的时钟
+  63           ** \param [in] I2CMtp: 0x0~0x7f
+  64           ** \return  none
+  65           ** \note (1)I2CMtp = 0 ,SCL = 3*10*Tsys
+  66           **     (2)I2CMtp != 0, SCL = 2*(1+I2CMtp)*10*Tsys
+  67          *****************************************************************************/
+  68          void I2C_ConfigCLK(uint8_t I2CMtp)
+  69          {
+  70   1        I2CMTP = I2CMtp;
+  71   1      }
+  72          /*****************************************************************************
+  73           ** \brief  I2C_EnableMasterMode
+  74           **     使能主控模式
+  75           ** \param [in] none
+  76           ** \return  none
+  77           ** \note  
+  78          *****************************************************************************/
+  79          void I2C_EnableMasterMode(void)
+  80          {
+  81   1        I2CMCR = 0x00;
+  82   1        I2CSCR  = 0x00;
+  83   1      }
+  84          /*****************************************************************************
+  85           ** \brief  I2C_DisableMasterMode
+  86           **     关闭主控模式
+  87           ** \param [in] none
+  88           ** \return  none
+  89           ** \note  
+  90          *****************************************************************************/
+  91          void I2C_DisableMasterMode(void)
+  92          {
+  93   1        ;
+  94   1      }
+  95          
+  96          /*****************************************************************************
+  97           ** \brief  I2C_GetMasterSendAddrFlag
+  98           **     获取主控模式寻址应答标志
+  99           ** \param [in] none
+ 100           ** \return 0: 从机有应答  1；从机无应答
+ 101           ** \note  
+ 102          *****************************************************************************/
+ 103          uint8_t I2C_GetMasterSendAddrFlag(void)
+ 104          {
+ 105   1        return ((I2CMSR & I2C_I2CMSR_ADD_ACK_Msk)? 1:0);
+ 106   1      }
+ 107          
+ 108          /*****************************************************************************
+ 109           ** \brief  I2C_GetBusArbitrationFlag
+ 110           **     获取主控模总线仲裁标志
+ 111           ** \param [in] none
+ 112           ** \return 0: 正常  1:丢失了总线控制权
+ 113           ** \note  
+ 114          *****************************************************************************/
+ 115          uint8_t I2C_GetBusArbitrationFlag(void)
+ 116          {
+C51 COMPILER V9.52.0.0   I2C                                                               09/06/2023 18:09:43 PAGE 3   
+
+ 117   1        return ((I2CMSR & I2C_I2CMSR_ARB_LOST_Msk)? 1:0); 
+ 118   1      }
+ 119          /*****************************************************************************
+ 120           ** \brief  I2C_GetMasterErrorFlag
+ 121           **     获取主控模式错误标志
+ 122           ** \param [in] none
+ 123           ** \return 0: 无错误 1；有错误
+ 124           ** \note 错误标志产生条件：(1)寻址从机无应答 (2)发送数据从机无应答
+ 125           **               (3)I2C总线仲裁冲突
+ 126          *****************************************************************************/
+ 127          uint8_t I2C_GetMasterErrorFlag(void)
+ 128          {
+ 129   1        return ((I2CMSR & I2C_I2CMSR_ERROR_Msk)? 1:0);  
+ 130   1      }
+ 131          /*****************************************************************************
+ 132           ** \brief  I2C_GetMasterBusyFlag
+ 133           **     获取主控模块Busy状态标志
+ 134           ** \param [in] none
+ 135           ** \return  1；正在发送
+ 136           ** \note 
+ 137          *****************************************************************************/
+ 138          uint8_t I2C_GetMasterBusyFlag(void)
+ 139          {
+ 140   1        return ((I2CMSR & I2C_I2CMSR_BUSY_Msk)? 1:0); 
+ 141   1      }
+ 142          /*****************************************************************************
+ 143           ** \brief  I2C_GetI2CBusBusyFlag
+ 144           **     获取总线忙状态标志
+ 145           ** \param [in] none
+ 146           ** \return 0: 空闲 1；总线忙
+ 147           ** \note 
+ 148          *****************************************************************************/
+ 149          uint8_t I2C_GetI2CBusBusyFlag(void)
+ 150          {
+ 151   1        return ((I2CMSR & I2C_I2CMSR_BUS_BUSY_Msk)? 1:0); 
+ 152   1      }
+ 153          /*****************************************************************************
+ 154           ** \brief  I2C_GetMasterIdleFlag
+ 155           **     获取主控模式空闲状态标志
+ 156           ** \param [in] none
+ 157           ** \return 0: 工作 1；空闲
+ 158           ** \note 
+ 159          *****************************************************************************/
+ 160          uint8_t I2C_GetMasterIdleFlag(void)
+ 161          {
+ 162   1        return ((I2CMSR & I2C_I2CMSR_IDLE_Msk)? 1:0); 
+ 163   1      }
+ 164          
+ 165          /*****************************************************************************
+ 166           ** \brief  I2C_EnableInt
+ 167           **     开启中断
+ 168           ** \param [in] none
+ 169           ** \return  none
+ 170           ** \note  
+ 171          *****************************************************************************/
+ 172          void I2C_EnableInt(void)
+ 173          {
+ 174   1        EIE2 |= IRQ_EIE2_I2CIE_Msk;
+ 175   1      }
+ 176          /*****************************************************************************
+ 177           ** \brief  I2C_DisableInt
+ 178           **     关闭中断
+C51 COMPILER V9.52.0.0   I2C                                                               09/06/2023 18:09:43 PAGE 4   
+
+ 179           ** \param [in] none
+ 180           ** \return  none
+ 181           ** \note  
+ 182          *****************************************************************************/
+ 183          void I2C_DisableInt(void)
+ 184          {
+ 185   1        EIE2 &= ~(IRQ_EIE2_I2CIE_Msk);
+ 186   1      }
+ 187          /*****************************************************************************
+ 188           ** \brief  I2C_GetMasterIntFlag
+ 189           **     获取主控模式下的中断标志位
+ 190           ** \param [in] none
+ 191           ** \return  0:无中断 1：有中断
+ 192           ** \note  
+ 193          *****************************************************************************/
+ 194          uint8_t I2C_GetMasterIntFlag(void)
+ 195          {
+ 196   1        return ((I2CMSR & I2C_I2CMSR_I2CMIF_Msk)? 1:0); 
+ 197   1      }
+ 198          /*****************************************************************************
+ 199           ** \brief  I2C_ClearMasterIntFlag
+ 200           **     清除主控模式下的中断标志位
+ 201           ** \param [in] none
+ 202           ** \return  none
+ 203           ** \note  
+ 204          *****************************************************************************/
+ 205          void I2C_ClearMasterIntFlag(void)
+ 206          {
+ 207   1        I2CMSR = 0x00;
+ 208   1      }
+ 209          
+ 210          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     92    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

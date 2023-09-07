@@ -1,0 +1,898 @@
+C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE EPWM
+OBJECT MODULE PLACED IN .\Objects\epwm.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\Lib\epwm.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Code\CMS;.\Code\Lib;
+                    -.\Code\User;.\Code\Hardware\UART) DEBUG PRINT(.\Listings\epwm.lst) TABS(2) OBJECT(.\Objects\epwm.obj)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          * Copyright (C) 2019 China Micro Semiconductor Limited Company. All Rights Reserved.
+   3          *
+   4          * This software is owned and published by:
+   5          * CMS LLC, No 2609-10, Taurus Plaza, TaoyuanRoad, NanshanDistrict, Shenzhen, China.
+   6          *
+   7          * BY DOWNLOADING, INSTALLING OR USING THIS SOFTWARE, YOU AGREE TO BE BOUND
+   8          * BY ALL THE TERMS AND CONDITIONS OF THIS AGREEMENT.
+   9          *
+  10          * This software contains source code for use with CMS
+  11          * components. This software is licensed by CMS to be adapted only
+  12          * for use in systems utilizing CMS components. CMS shall not be
+  13          * responsible for misuse or illegal use of this software for devices not
+  14          * supported herein. CMS is providing this software "AS IS" and will
+  15          * not be responsible for issues arising from incorrect user implementation
+  16          * of the software.
+  17          *
+  18          * This software may be replicated in part or whole for the licensed use,
+  19          * with the restriction that this Disclaimer and Copyright notice must be
+  20          * included with each copy of this software, whether used in part or whole,
+  21          * at all times.
+  22          */
+  23          
+  24          /****************************************************************************/
+  25          /** \file epwm.c
+  26          **
+  27          ** 
+  28          **
+  29          **  History:
+  30          **  
+  31          *****************************************************************************/
+  32          
+  33          /****************************************************************************/
+  34          /*  include files
+  35          *****************************************************************************/
+  36          #include "epwm.h"
+  37          /****************************************************************************/
+  38          /*  Local pre-processor symbols/macros ('#define')
+  39          *****************************************************************************/
+  40          
+  41          /****************************************************************************/
+  42          /*  Global variable definitions (declared in header file with 'extern')
+  43          *****************************************************************************/
+  44          
+  45          /****************************************************************************/
+  46          /*  Local type definitions ('typedef')
+  47          *****************************************************************************/
+  48          
+  49          /****************************************************************************/
+  50          /*  Local variable  definitions ('static')
+  51          *****************************************************************************/
+  52          
+  53          /****************************************************************************/
+  54          /*  Local function prototypes ('static')
+C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 2   
+
+  55          *****************************************************************************/
+  56          
+  57          /****************************************************************************/
+  58          /*  Function implementation - global ('extern') and local('static')
+  59          *****************************************************************************/
+  60          /********************************************************************************
+  61           ** \brief   EPWM_ConfigRunMode
+  62           **      设置EPWM的运行模式
+  63           ** \param [in] EpwmRunModeMask: (1)EPWM_COUNT_UP_DOWN
+  64                           (2)EPWM_COUNT_DOWN
+  65                           (3)EPWM_OCU_ASYMMETRIC
+  66                           (4)EPWM_OCU_SYMMETRIC
+  67                           (5)EPWM_WFG_INDEPENDENT
+  68                           (6)EPWM_WFG_COMPLEMENTARY
+  69                           (7)EPWM_WFG_SYNCHRONIZED
+  70                           (8)EPWM_OC_GROUP
+  71                           (9)EPWM_OC_INDEPENDENT
+  72           ** \return  none
+  73           ** \note    以上9种摸式可组合成不同的运行模式，且共用一个8位寄存器
+  74           **      使用方法可参考app_epwm.c
+  75           ******************************************************************************/
+  76          void EPWM_ConfigRunMode( uint8_t EpwmRunModeMask)
+  77          {
+  78   1        PWMCON = EpwmRunModeMask;       /*注：直接赋值*/
+  79   1      }
+  80          /*****************************************************************************
+  81           ** \brief   EPWM_ConfigChannelClk  
+  82          ** \param [in] ChannelNum : EPWM0,EPWM1,EPWM2,EPWM3,EPWM4,EPWM5
+  83           **       ClkDiv: (1)EPWM_CLK_DIV_1 
+  84           **           (2)EPWM_CLK_DIV_2
+  85           **           (3)EPWM_CLK_DIV_4
+  86           **           (4)EPWM_CLK_DIV_8
+  87           **           (5)EPWM_CLK_DIV_16
+  88           **           (6)EPWM_CLK_DIV_32
+  89           ** \return  none 
+  90           ** \note 
+  91           ** (1)例因为PWM01PSC共同控制PWM0、PWM1通道 ，所以此函数统一设置PWMPSC=0x01
+  92           ** 若需要其他的分频，请酌情对寄存器赋值
+  93           ** (2)EPWM 分频分为两级：PWMxPSC PWMnDIV 
+  94           ** 第一级分频(PWMxPSC)：0x00 预分频停止并且计数器停止，系统时钟分频系数PWMxPSC+1
+  95           ** 第二级分频（PWMnDIV): 0x00 FEPWMPSC/2; 0x01 FEPWMPSC/4；0x02:FEPWMPSC/8；0x3 FEPWMPSC/16
+  96           ** 0x04 FEPWMPSC ; 其他 Fsys 
+  97           ** 分频级数：1~4096，例Fsys=8M，EPWM的频率范围：1.95k ~ 8M 
+  98          *****************************************************************************/
+  99          void EPWM_ConfigChannelClk(uint8_t ChannelNum,uint8_t ClkDiv)
+ 100          {
+ 101   1        switch(ChannelNum)
+ 102   1        {
+ 103   2          case EPWM0:
+ 104   2             PWM01PSC = 0x01;
+ 105   2             PWM0DIV = ClkDiv;
+ 106   2            break;
+ 107   2          case EPWM1:
+ 108   2            PWM01PSC = 0x01;
+ 109   2            PWM1DIV = ClkDiv;
+ 110   2            break;
+ 111   2          case EPWM2:
+ 112   2             PWM23PSC = 0x01;
+ 113   2             PWM2DIV = ClkDiv;
+ 114   2             break;
+ 115   2          case EPWM3:
+ 116   2             PWM23PSC = 0x01;
+C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 3   
+
+ 117   2             PWM3DIV = ClkDiv;
+ 118   2             break; 
+ 119   2          case EPWM4:
+ 120   2             PWM45PSC = 0x01;
+ 121   2             PWM4DIV = ClkDiv;
+ 122   2             break;       
+ 123   2          case EPWM5:
+ 124   2             PWM45PSC = 0x01;
+ 125   2             PWM5DIV = ClkDiv;
+ 126   2             break;   
+ 127   2          default:
+ 128   2            break;
+ 129   2        }
+ 130   1      }
+ 131          /*****************************************************************************
+ 132           ** \brief   EPWM_ConfigChannelPeriod
+ 133           **      设置EPWM通道的频率以及占空比
+ 134           ** \param [in] ChannelNum : EPWM0,EPWM1,EPWM2,EPWM3,EPWM4,EPWM5
+ 135           **       Period: 16位周期值
+ 136           ** \return none
+ 137           ** \note    
+ 138           ****************************************************************************/
+ 139          void EPWM_ConfigChannelPeriod(uint8_t ChannelNum,uint16_t Period)
+ 140          { 
+ 141   1        switch(ChannelNum)
+ 142   1        {
+ 143   2          case EPWM0:
+ 144   2            PWMP0H = Period>>8;
+ 145   2            PWMP0L = Period;
+ 146   2            PWMLOADEN |= EPWM_CH_0_MSK;
+ 147   2            break;
+ 148   2          case EPWM1:
+ 149   2            PWMP1H = Period>>8;
+ 150   2            PWMP1L = Period;
+ 151   2            PWMLOADEN |= EPWM_CH_1_MSK;
+ 152   2            break;
+ 153   2          case EPWM2:
+ 154   2            PWMP2H = Period>>8;
+ 155   2            PWMP2L = Period;
+ 156   2            PWMLOADEN |= EPWM_CH_2_MSK;
+ 157   2            break;
+ 158   2          case EPWM3:
+ 159   2            PWMP3H = Period>>8;
+ 160   2            PWMP3L = Period;
+ 161   2            PWMLOADEN |= EPWM_CH_3_MSK;
+ 162   2            break;  
+ 163   2          case EPWM4:
+ 164   2            PWMP4H = Period>>8;
+ 165   2            PWMP4L = Period;
+ 166   2            PWMLOADEN |= EPWM_CH_4_MSK;
+ 167   2            break;        
+ 168   2          case EPWM5:
+ 169   2            PWMP5H = Period>>8;
+ 170   2            PWMP5L = Period;
+ 171   2            PWMLOADEN |= EPWM_CH_5_MSK;
+ 172   2            break;    
+ 173   2          default:
+ 174   2            break;
+ 175   2        } 
+ 176   1      }
+ 177          /*****************************************************************************
+ 178           ** \brief   EPWM_ConfigChannelSymDuty
+C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 4   
+
+ 179           **      设置EPWM通道对称模式占空比
+ 180           ** \param [in] ChannelNum  :EPWM0,EPWM1,EPWM2,EPWM3,EPWM4,EPWM5
+ 181           **       Duty: 16位占空比
+ 182           ** \return none
+ 183           ** \note   
+ 184           ****************************************************************************/
+ 185          void EPWM_ConfigChannelSymDuty(uint8_t ChannelNum,uint16_t Duty)
+ 186          {
+ 187   1        switch(ChannelNum)
+ 188   1        {
+ 189   2          case EPWM0:
+ 190   2            PWMD0H = Duty>>8;
+ 191   2            PWMD0L = Duty;
+ 192   2            PWMLOADEN |= EPWM_CH_0_MSK;
+ 193   2            break;
+ 194   2          case EPWM1:
+ 195   2            PWMD1H = Duty>>8;
+ 196   2            PWMD1L = Duty;
+ 197   2            PWMLOADEN |= EPWM_CH_1_MSK;
+ 198   2            break;
+ 199   2          case EPWM2:
+ 200   2            PWMD2H = Duty>>8;
+ 201   2            PWMD2L = Duty;
+ 202   2            PWMLOADEN |= EPWM_CH_2_MSK;
+ 203   2            break;
+ 204   2          case EPWM3:
+ 205   2            PWMD3H = Duty>>8;
+ 206   2            PWMD3L = Duty;
+ 207   2            PWMLOADEN |= EPWM_CH_3_MSK;
+ 208   2            break;  
+ 209   2          case EPWM4:
+ 210   2            PWMD4H = Duty>>8;
+ 211   2            PWMD4L = Duty;
+ 212   2            PWMLOADEN |= EPWM_CH_4_MSK;
+ 213   2            break;        
+ 214   2          case EPWM5:
+ 215   2            PWMD5H = Duty>>8;
+ 216   2            PWMD5L = Duty;
+ 217   2            PWMLOADEN |= EPWM_CH_5_MSK;
+ 218   2            break;    
+ 219   2          default:
+ 220   2            break;
+ 221   2        }   
+ 222   1      }
+ 223           /*****************************************************************************
+ 224           ** \brief   EPWM_ConfigChannelAsymDuty
+ 225           **      设置EPWM通道非对称模式占空比
+ 226           ** \param [in] ChannelNum  :EPWM0,EPWM1,EPWM2,EPWM3,EPWM4,EPWM5
+ 227           **       DownCmp: 16 bit 向下比较值
+ 228           ** \return none
+ 229           ** \note    只适用于中心对齐计数(上下计数)模式
+ 230           ****************************************************************************/
+ 231          void EPWM_ConfigChannelAsymDuty(uint8_t ChannelNum,uint16_t UpCmp, uint16_t DowmCmp)
+ 232          {
+ 233   1        switch(ChannelNum)
+ 234   1        {
+ 235   2          case EPWM0:
+ 236   2            PWMD0H = UpCmp>>8;
+ 237   2            PWMD0L = UpCmp;
+ 238   2            PWMDD0H = DowmCmp>>8;
+ 239   2            PWMDD0L = DowmCmp;  
+ 240   2            PWMLOADEN |= EPWM_CH_0_MSK;   
+C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 5   
+
+ 241   2            break;
+ 242   2          case EPWM1:
+ 243   2            PWMD1H = UpCmp>>8;
+ 244   2            PWMD1L = UpCmp;
+ 245   2            PWMDD1H = DowmCmp>>8;
+ 246   2            PWMDD1L = DowmCmp;  
+ 247   2            PWMLOADEN |= EPWM_CH_1_MSK;
+ 248   2            break;
+ 249   2          case EPWM2:
+ 250   2            PWMD2H = UpCmp>>8;
+ 251   2            PWMD2L = UpCmp;
+ 252   2            PWMDD2H = DowmCmp>>8;
+ 253   2            PWMDD2L = DowmCmp;
+ 254   2            PWMLOADEN |= EPWM_CH_2_MSK;   
+ 255   2            break;
+ 256   2          case EPWM3:
+ 257   2            PWMD3H = UpCmp>>8;
+ 258   2            PWMD3L = UpCmp;
+ 259   2            PWMDD3H = DowmCmp>>8;
+ 260   2            PWMDD3L = DowmCmp;
+ 261   2            PWMLOADEN |= EPWM_CH_3_MSK;   
+ 262   2            break;  
+ 263   2          case EPWM4:
+ 264   2            PWMD4H = UpCmp>>8;
+ 265   2            PWMD4L = UpCmp;
+ 266   2            PWMDD4H = DowmCmp>>8;
+ 267   2            PWMDD4L = DowmCmp;  
+ 268   2            PWMLOADEN |= EPWM_CH_4_MSK;
+ 269   2            break;        
+ 270   2          case EPWM5:
+ 271   2            PWMD5H = UpCmp>>8;
+ 272   2            PWMD5L = UpCmp;
+ 273   2            PWMDD5H = DowmCmp>>8;
+ 274   2            PWMDD5L = DowmCmp;  
+ 275   2            PWMLOADEN |= EPWM_CH_5_MSK;
+ 276   2            break;    
+ 277   2          default:
+ 278   2            break;
+ 279   2        }   
+ 280   1      }
+ 281          /****************************************************************************
+ 282           ** \brief   EPWM_EnableOneShotMode
+ 283           **      开启One-Shot模式
+ 284           ** \param [in]  ChannelMask   EPWM_CH_0_MSK ~ EPWM_CH_5_MSK
+ 285           ** \return  none
+ 286           ** \note 
+ 287          *****************************************************************************/
+ 288          void EPWM_EnableOneShotMode(uint8_t ChannelMask)
+ 289          {     
+ 290   1        PWMCNTM &= ~ChannelMask;  
+ 291   1      }
+ 292          /****************************************************************************
+ 293           ** \brief   EPWM_EnableAutoLoadMode
+ 294           **      开启自动加载模式
+ 295           ** \param [in]  ChannelMask   EPWM_CH_0_MSK ~ EPWM_CH_5_MSK
+ 296           ** \return  none
+ 297           ** \note 
+ 298          *****************************************************************************/
+ 299          void EPWM_EnableAutoLoadMode(uint8_t ChannelMask)
+ 300          {     
+ 301   1        PWMCNTM |= ChannelMask; 
+ 302   1      }
+C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 6   
+
+ 303          
+ 304          /****************************************************************************
+ 305           ** \brief   EPWM_Start   
+ 306           ** \param [in]  ChannelMask   EPWM_CH_0_MSK ~ EPWM_CH_5_MSK
+ 307           ** \return  none
+ 308           ** \note 
+ 309           ****************************************************************************/
+ 310          void EPWM_Start( uint8_t ChannelMask)
+ 311          {     
+ 312   1        PWMCNTE |= ChannelMask;   /*使能PWMn计数器*/
+ 313   1      }
+ 314          /*****************************************************************************
+ 315           ** \brief   EPWM_Stop
+ 316           **
+ 317           ** \param [in] ChannelMask  : EPWM_CH_0_MSK ~ EPWM_CH_5_MSK
+ 318           ** \return  none
+ 319           ** \note    
+ 320          *****************************************************************************/
+ 321          void EPWM_Stop( uint8_t ChannelMask)
+ 322          {
+ 323   1        PWMCNTE &= ~ ChannelMask;   /*停止计数*/
+ 324   1      }
+ 325          
+ 326          /*****************************************************************************
+ 327           ** \brief   EPWM_EnableOutput
+ 328           **      开启EPWM输出
+ 329           ** \param [in]  ChannelMask   EPWM_CH_0_MSK ~ EPWM_CH_5_MSK   
+ 330           ** \return  none
+ 331           ** \note   
+ 332          *****************************************************************************/
+ 333          void EPWM_EnableOutput( uint8_t ChannelMask)
+ 334          {
+ 335   1        PWMOE |= ChannelMask;   /*使能PWM输出*/ 
+ 336   1      }
+ 337          /*****************************************************************************
+ 338           ** \brief   EPWM_DisableOutput
+ 339           **      关闭EPWM输出
+ 340           ** \param [in]  ChannelMask   EPWM_CH_0_MSK ~ EPWM_CH_5_MSK
+ 341           ** \return  none
+ 342           ** \note    
+ 343          *****************************************************************************/
+ 344          void EPWM_DisableOutput( uint8_t ChannelMask)
+ 345          {
+ 346   1        PWMOE &= ~(ChannelMask);    
+ 347   1      }
+ 348          /*****************************************************************************
+ 349           ** \brief   EPWM_EnableFaultBrake
+ 350           **      设置EPWM刹车模式
+ 351           ** \param [in] BrakeSource: [0]: EPWM_BRK_SOFTWARE   :软件刹车
+ 352           **               [1]: EPWM_BRK_FB      :外部硬件刹车通道
+ 353           **                         [2]: EPWM_BRK_ACMP0     :比较器0刹车
+ 354           **                         [3]: EPWM_BRK_ACMP1     :比较器1刹车
+ 355           **               [4]: EPWM_BRK_ADC     :ADC刹车
+ 356           **       CountMode:(1)EPWM_BRK_COUNT_HOLD    
+ 357           **             (2)EPWM_BRK_COUNT_CLEAR
+ 358           ** \return  none
+ 359           ** \note    
+ 360          *****************************************************************************/
+ 361          void EPWM_EnableFaultBrake( uint8_t BrakeSource , uint8_t CountMode)
+ 362          {
+ 363   1        uint8_t Temp=0;
+ 364   1        
+C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 7   
+
+ 365   1        Temp = PWMFBKC;
+ 366   1        Temp &= ~(EPWM_PWMFBKC_PWMFBCCE_Msk);
+ 367   1        Temp |= CountMode;
+ 368   1        PWMFBKC = Temp;
+ 369   1        switch(BrakeSource)
+ 370   1        {
+ 371   2          case EPWM_BRK_FB:
+ 372   2            PWMFBKC |= EPWM_PWMFBKC_PWMFBEN_Msk;
+ 373   2            break;
+ 374   2          case EPWM_BRK_ACMP0:
+ 375   2            CNFBCON |= ACMP_CNFBCON_C0FBEN_Msk;
+ 376   2            break;
+ 377   2          case EPWM_BRK_ACMP1:
+ 378   2            CNFBCON |= ACMP_CNFBCON_C1FBEN_Msk;
+ 379   2            break;
+ 380   2          case EPWM_BRK_ADC:
+ 381   2            ADCMPC |= ADC_ADCMPC_ADFBEN_Msk;
+ 382   2            break;
+ 383   2          case EPWM_BRK_SOFTWARE:
+ 384   2            break;
+ 385   2          default:
+ 386   2            break;  
+ 387   2        }
+ 388   1      }
+ 389          /*****************************************************************************
+ 390           ** \brief   EPWM_DisableFaultBrake
+ 391           **      关闭EPWM刹车模式
+ 392           ** \param [in] BrakeSource: [0]: EPWM_BRK_SOFTWARE   :软件刹车
+ 393           **               [1]: EPWM_BRK_FB      :外部硬件刹车通道
+ 394           **                         [2]: EPWM_BRK_ACMP0     :比较器0刹车
+ 395           **                         [3]: EPWM_BRK_ACMP1     :比较器1刹车
+ 396           **               [4]: EPWM_BRK_ADC     :ADC刹车
+ 397           ** \return  none
+ 398           ** \note    
+ 399          *****************************************************************************/
+ 400          void EPWM_DisableFaultBrake( uint8_t BrakeSource)
+ 401          {
+ 402   1        switch(BrakeSource)
+ 403   1        {
+ 404   2          case EPWM_BRK_FB:
+ 405   2            PWMFBKC &= ~(EPWM_PWMFBKC_PWMFBEN_Msk);
+ 406   2            break;
+ 407   2          case EPWM_BRK_ACMP0:
+ 408   2            CNFBCON &= ~(ACMP_CNFBCON_C0FBEN_Msk);
+ 409   2            break;
+ 410   2          case EPWM_BRK_ACMP1:
+ 411   2            CNFBCON &= ~(ACMP_CNFBCON_C1FBEN_Msk);
+ 412   2            break;
+ 413   2          case EPWM_BRK_ADC:
+ 414   2            ADCMPC &= ~(ADC_ADCMPC_ADFBEN_Msk);
+ 415   2            break;
+ 416   2          case EPWM_BRK_SOFTWARE:
+ 417   2            break;
+ 418   2          default:
+ 419   2            break;  
+ 420   2        }
+ 421   1      }
+ 422          /****************************************************************************
+ 423           ** \brief   EPWM_ConfigChannelBrakeLevel
+ 424           **      设置EPWM通道刹车电平
+ 425           ** \param [in]  ChannelMask： EPWM_CH_0_MSK ~ EPWM_CH_5_MSK
+ 426           **          BrakeLevel: FaultBreake后的EPWM通道电平 ：0/1(低/高)
+C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 8   
+
+ 427           ** \return  none
+ 428           ** \note   
+ 429          *****************************************************************************/
+ 430          void EPWM_ConfigChannelBrakeLevel( uint8_t ChannelMask, uint8_t BrakeLevel)
+ 431          { 
+ 432   1        if(1 == BrakeLevel)
+ 433   1        {
+ 434   2          PWMFBKD  |= ChannelMask;    
+ 435   2        }
+ 436   1        else
+ 437   1        {
+ 438   2          PWMFBKD  &= ~(ChannelMask);   
+ 439   2        }
+ 440   1      }
+ 441          /****************************************************************************
+ 442           ** \brief   EPWM_EnableDeadZone
+ 443           **      开启死区
+ 444           ** \param [in] Channel: EPWM0、EPWM1....EPWM5    
+ 445           **     DeadTime : 死区时间( 0~0xFF) = DeadTime * Tepwm
+ 446           ** \return  none
+ 447           ** \note  
+ 448          *****************************************************************************/
+ 449          void EPWM_EnableDeadZone( uint8_t Channel, uint8_t DeadTime)
+ 450          {
+ 451   1        switch(Channel)
+ 452   1        {
+ 453   2          case EPWM0:
+ 454   2          case EPWM1:
+ 455   2            PWMDTE  |= EPWM_PWMDTE_PWM01DTE_Msk;
+ 456   2            PWM01DT = DeadTime;
+ 457   2            break;
+ 458   2          case EPWM2:
+ 459   2          case EPWM3:
+ 460   2            PWMDTE  |= EPWM_PWMDTE_PWM23DTE_Msk;
+ 461   2            PWM23DT = DeadTime;
+ 462   2            break;
+ 463   2          case EPWM4:
+ 464   2          case EPWM5:
+ 465   2            PWMDTE  |= EPWM_PWMDTE_PWM45DTE_Msk;
+ 466   2            PWM45DT = DeadTime;
+ 467   2            break;
+ 468   2          default:
+ 469   2            break;    
+ 470   2        } 
+ 471   1      }
+ 472          /*****************************************************************************
+ 473           ** \brief   EPWM_DisableDeadZone
+ 474           **      关闭EPWM死区
+ 475           ** \param [in] Channel: EPWM0、EPWM1....EPWM5  
+ 476           ** \return  none
+ 477           ** \note  
+ 478          *****************************************************************************/
+ 479          void EPWM_DisableDeadZone( uint8_t Channel)
+ 480          {
+ 481   1        switch(Channel)
+ 482   1        {
+ 483   2          case EPWM0:
+ 484   2          case EPWM1:
+ 485   2            PWMDTE  &= ~(EPWM_PWMDTE_PWM01DTE_Msk);
+ 486   2            break;
+ 487   2          case EPWM2:
+ 488   2          case EPWM3:
+C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 9   
+
+ 489   2            PWMDTE  &= ~(EPWM_PWMDTE_PWM23DTE_Msk);
+ 490   2            break;
+ 491   2          case EPWM4:
+ 492   2          case EPWM5:
+ 493   2            PWMDTE  &= ~(EPWM_PWMDTE_PWM45DTE_Msk);
+ 494   2            break;
+ 495   2          default:
+ 496   2            break;    
+ 497   2        }
+ 498   1      }
+ 499          /*****************************************************************************
+ 500           ** \brief   EPWM_EnableMaskControl
+ 501           **      掩码控制开启
+ 502           ** \param [in] ChannelMask:  EPWM_CH_0_MSK ~ EPWM_CH_5_MSK   
+ 503           **         MaskLevel: 掩码的数据 :0/1(低/高)
+ 504           ** \return  none
+ 505           ** \note   
+ 506          *****************************************************************************/
+ 507          void EPWM_EnableMaskControl( uint8_t ChannelMask, uint8_t MaskLevel)
+ 508          {
+ 509   1        if(1 == MaskLevel)
+ 510   1        {
+ 511   2          PWMMASKD  |= ChannelMask;   
+ 512   2        }
+ 513   1        else
+ 514   1        {
+ 515   2          PWMMASKD  &= ~(ChannelMask);    
+ 516   2        }
+ 517   1        
+ 518   1        PWMMASKE  |= ChannelMask;     /*使能控制位*/  
+ 519   1      }
+ 520          /*****************************************************************************
+ 521           ** \brief   EPWM_DisableMaskControl
+ 522           **      掩码控制关闭
+ 523           ** \param [in] ChannelMask:  EPWM_CH_0_MSK ~ EPWM_CH_5_MSK     
+ 524           ** \return  none
+ 525           ** \note   
+ 526          *****************************************************************************/
+ 527          void EPWM_DisableMaskControl( uint8_t ChannelMask)
+ 528          { 
+ 529   1        PWMMASKE  &=~(ChannelMask);   
+ 530   1      }
+ 531          /*****************************************************************************
+ 532           ** \brief   EPWM_EnableUpCmpInt
+ 533           **      开启向上比较中断
+ 534           ** \param [in]  ChannelMask： EPWM_CH_0_MSK ~ EPWM_CH_5_MSK    
+ 535           ** \return  none
+ 536           ** \note   
+ 537          *****************************************************************************/
+ 538          void EPWM_EnableUpCmpInt( uint8_t ChannelMask)
+ 539          {
+ 540   1        PWMUIE |= ChannelMask ;
+ 541   1      }
+ 542          /*****************************************************************************
+ 543           ** \brief   EPWM_DisableUpCmptInt
+ 544           **      关闭向上比较中断
+ 545           ** \param [in]  ChannelMask ：EPWM_CH_0_MSK ~ EPWM_CH_5_MSK  
+ 546           ** \return  none
+ 547           ** \note   
+ 548          *****************************************************************************/
+ 549          void EPWM_DisableUpCmpInt( uint8_t ChannelMask)
+ 550          {
+C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 10  
+
+ 551   1        PWMUIE &= ~ChannelMask ;
+ 552   1      }
+ 553          /*****************************************************************************
+ 554           ** \brief   EPWM_GetUpCmpIntFlag
+ 555           **      获取向上比较中断标志位
+ 556           ** \param [in] ChannelNum:EPWM0,EPWM1,EPWM2,EPWM3,EPWM4,EPWM5
+ 557           ** \return  0: 无中断产生
+ 558           **          1：有中断产生
+ 559           ** \note   
+ 560          *****************************************************************************/
+ 561          uint8_t EPWM_GetUpCmpIntFlag( uint8_t ChannelNum)
+ 562          {
+ 563   1        return(PWMUIF & (1<<ChannelNum)? 1:0);
+ 564   1      
+ 565   1      }
+ 566          /*****************************************************************************
+ 567           ** \brief   EPWM_ClearUpCmpIntFlag
+ 568           **      清除向上比较中断标志位
+ 569           ** \param [in] ChannelNum:EPWM0,EPWM1,EPWM2,EPWM3,EPWM4,EPWM5
+ 570           ** \return  none
+ 571           ** \note   
+ 572          *****************************************************************************/
+ 573          void EPWM_ClearUpCmpIntFlag( uint8_t ChannelNum)
+ 574          {
+ 575   1        PWMUIF = 0xff & (~(1<<ChannelNum));
+ 576   1      }
+ 577          /*****************************************************************************
+ 578           ** \brief   EPWM_EnableDownCmpInt
+ 579           **      开启向下比较中断
+ 580           ** \param [in]ChannelMask : EPWM_CH_0_MSK ~ EPWM_CH_5_MSK  
+ 581           ** \return  none
+ 582           ** \note   
+ 583          *****************************************************************************/
+ 584          void EPWM_EnableDownCmpInt( uint8_t ChannelMask)
+ 585          {
+ 586   1        PWMDIE  |= ChannelMask;
+ 587   1      }
+ 588          /*****************************************************************************
+ 589           ** \brief   EPWM_DisableDownCmpInt
+ 590           **      关闭向下比较中断
+ 591           ** \param [in]  ChannelMask : EPWM_CH_0_MSK ~ EPWM_CH_5_MSK  
+ 592           ** \return  none
+ 593           ** \note   
+ 594          *****************************************************************************/
+ 595          void EPWM_DisableDownCmpInt( uint8_t ChannelMask)
+ 596          {
+ 597   1        PWMDIE  &= ~ChannelMask;  
+ 598   1      }
+ 599          /*****************************************************************************
+ 600           ** \brief   EPWM_GetUpCmpIntFlag
+ 601           **      获取向下比较中断标志位
+ 602           ** \param [in] ChannelNum: EPWM0,EPWM1,EPWM2,EPWM3,EPWM4,EPWM5
+ 603           ** \return  0: 无中断产生
+ 604           **          1：有中断产生
+ 605           ** \note   
+ 606          *****************************************************************************/
+ 607          uint8_t EPWM_GetDownCmpIntFlag( uint8_t ChannelNum)
+ 608          {
+ 609   1        return(PWMDIF & (1<<ChannelNum)? 1:0);
+ 610   1      }
+ 611          /*****************************************************************************
+ 612           ** \brief   EPWM_ClearUpCmpIntFlag
+C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 11  
+
+ 613           **      清除向下比较中断标志位
+ 614           ** \param [in]  ChannelNum :EPWM0,EPWM1,EPWM2,EPWM3,EPWM4,EPWM5
+ 615           ** \return  none
+ 616           ** \note   
+ 617          *****************************************************************************/
+ 618          void EPWM_ClearDownCmpIntFlag( uint8_t ChannelNum)
+ 619          {
+ 620   1        PWMDIF = 0xff & (~(1<<ChannelNum));
+ 621   1      }
+ 622          /*****************************************************************************
+ 623           ** \brief   EPWM_EnablePeriodInt
+ 624           **      开启周期中断
+ 625           ** \param [in]  ChannelMask: EPWM_CH_0_MSK ~ EPWM_CH_5_MSK 
+ 626           ** \return   none     
+ 627           ** \note   
+ 628          *****************************************************************************/
+ 629          void EPWM_EnablePeriodInt( uint8_t ChannelMask)
+ 630          {
+ 631   1        PWMPIE |= ChannelMask;
+ 632   1      }
+ 633          /*****************************************************************************
+ 634           ** \brief   EPWM_DisablePeriodInt
+ 635           **      关闭周期中断
+ 636           ** \param [in]ChannelMask: EPWM_CH_0_MSK ~ EPWM_CH_5_MSK 
+ 637           ** \return   none     
+ 638           ** \note   
+ 639          *****************************************************************************/
+ 640          void EPWM_DisablePeriodInt( uint8_t ChannelMask)
+ 641          {
+ 642   1        PWMPIE &= ~ChannelMask;
+ 643   1      }
+ 644          /*****************************************************************************
+ 645           ** \brief   EPWM_ClearPeriodIntFlag
+ 646           **      清除周期中断标志位 
+ 647           ** \param [in] ChannelNum: EPWM0,EPWM1,EPWM2,EPWM3,EPWM4,EPWM5
+ 648           ** \return   none     
+ 649           ** \note   
+ 650          *****************************************************************************/
+ 651          void EPWM_ClearPeriodIntFlag( uint8_t ChannelNum)
+ 652          {
+ 653   1        PWMPIF = 0xff & (~(1<<ChannelNum));
+ 654   1      }
+ 655          /*****************************************************************************
+ 656           ** \brief   EPWM_ClearPeriodIntFlag
+ 657           **      获取周期中断标志位 
+ 658           ** \param [in] ChannelNum: 0~5
+ 659           ** \return   0：无中断产生
+ 660           **           1：有中断产生
+ 661           ** \note   
+ 662          *****************************************************************************/
+ 663          uint8_t EPWM_GetPeriodIntFlag( uint8_t ChannelNum)
+ 664          {
+ 665   1        return(PWMPIF & (1<<ChannelNum)? 1:0);
+ 666   1      }
+ 667          
+ 668          /*****************************************************************************
+ 669           ** \brief   EPWM_EnableZeroInt
+ 670           **      开启零点中断
+ 671           ** \param [in] ChannelMask: EPWM_CH_0_MSK ~ EPWM_CH_5_MSK  
+ 672           ** \return   none     
+ 673           ** \note   
+ 674          *****************************************************************************/
+C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 12  
+
+ 675          void EPWM_EnableZeroInt( uint8_t ChannelMask)
+ 676          {
+ 677   1        PWMZIE |= ChannelMask;
+ 678   1      }
+ 679          /*****************************************************************************
+ 680           ** \brief   EPWM_DisableZeroInt
+ 681           **      关闭零点中断 
+ 682           ** \param [in]ChannelMask: EPWM_CH_0_MSK ~ EPWM_CH_5_MSK 
+ 683           ** \return   none     
+ 684           ** \note   
+ 685          *****************************************************************************/
+ 686          void EPWM_DisableZeroInt( uint8_t ChannelMask)
+ 687          {
+ 688   1        PWMZIE &= ~ChannelMask;
+ 689   1      }
+ 690          /*****************************************************************************
+ 691           ** \brief   EPWM_ClearZeroIntFlag
+ 692           **      清除零点中断标志位
+ 693           ** \param [in]  ChannelNum: EPWM0,EPWM1,EPWM2,EPWM3,EPWM4,EPWM5
+ 694           ** \return   none     
+ 695           ** \note   
+ 696          *****************************************************************************/
+ 697          void EPWM_ClearZeroIntFlag( uint8_t ChannelNum)
+ 698          {
+ 699   1        PWMZIF = 0xff & (~(1<<ChannelNum));
+ 700   1      }
+ 701          /*****************************************************************************
+ 702           ** \brief   EPWM_GetZeroIntFlag
+ 703           **      获取零点中断标志位 
+ 704           ** \param [in] ChannelNum: EPWM0,EPWM1,EPWM2,EPWM3,EPWM4,EPWM5
+ 705           ** \return   0：无中断产生
+ 706           **           1：有中断产生   
+ 707           ** \note   
+ 708           *****************************************************************************/
+ 709          uint8_t EPWM_GetZeroIntFlag( uint8_t ChannelNum)
+ 710          {
+ 711   1        return(PWMZIF & (1<<ChannelNum)? 1:0);
+ 712   1      }
+ 713          /*****************************************************************************
+ 714           ** \brief   EPWM_EnableFaultBrakeInt
+ 715           **      开启故障刹车中断 
+ 716           ** \param [in] none
+ 717           ** \return  none
+ 718           ** \note  
+ 719          *****************************************************************************/
+ 720          void EPWM_EnableFaultBrakeInt( void)
+ 721          {
+ 722   1        PWMFBKC  &=~(EPWM_PWMFBKC_PWMFBF_Msk);   /*清刹车标志位*/
+ 723   1        PWMFBKC  |= EPWM_PWMFBKC_PWMFBIE_Msk;   /*开启刹车中断*/
+ 724   1        
+ 725   1      }
+ 726          /*****************************************************************************
+ 727           ** \brief   EPWM_DisableFaultBrakeInt  
+ 728           **      关闭故障刹车中断 
+ 729           ** \param [in]none
+ 730           ** \return  none
+ 731           ** \note 
+ 732          *****************************************************************************/
+ 733          void EPWM_DisableFaultBrakeInt(void)
+ 734          {
+ 735   1        PWMFBKC  &= ~(EPWM_PWMFBKC_PWMFBIE_Msk);
+ 736   1      }
+C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 13  
+
+ 737          /*****************************************************************************
+ 738           ** \brief   EPWM_GetFaultBrakeIntFlag
+ 739           **      获取故障刹车中断标志位
+ 740           ** \param [in] none
+ 741           ** \return  0: 无中断产生
+ 742           **          1：有中断产生
+ 743           ** \note  
+ 744          *****************************************************************************/
+ 745          uint8_t EPWM_GetFaultBrakeIntFlag(void)
+ 746          {
+ 747   1        return((PWMFBKC & (EPWM_PWMFBKC_PWMFBF_Msk))? 1:0);
+ 748   1      }
+ 749          /*****************************************************************************
+ 750           ** \brief   EPWM_ClearFaultBrakeIntFlag  
+ 751           **      清除故障刹车中断标志位 
+ 752           ** \param [in] none
+ 753           ** \return  none
+ 754           ** \note 
+ 755          *****************************************************************************/
+ 756          void EPWM_ClearFaultBrakeIntFlag( void)
+ 757          {
+ 758   1        PWMFBKC  &= ~(EPWM_PWMFBKC_PWMFBF_Msk);   /*清刹车标志位*/
+ 759   1      }
+ 760          
+ 761          /*****************************************************************************
+ 762           ** \brief   EPWM_EnableReverseOutput
+ 763           **      开启反向输出
+ 764           ** \param [in] ChannelMask : EPWM_CH_0_MSK ~ EPWM_CH_5_MSK 
+ 765           ** \return  none
+ 766           ** \note  正常模式： EPWM 开始从初值开始计数时，PWM输出口输出为低电平, 
+ 767           ** 当EPWM计数值与向上、向下计数匹配时，输出翻转
+ 768          *****************************************************************************/
+ 769          void  EPWM_EnableReverseOutput( uint8_t ChannelMask)
+ 770          {
+ 771   1        PWMPINV |=ChannelMask;
+ 772   1      }
+ 773          /*****************************************************************************
+ 774           ** \brief   EPWM_DisableReverseOutput
+ 775           **      关闭反向输出
+ 776           ** \param [in] ChannelMask: EPWM_CH_0_MSK ~ EPWM_CH_5_MSK  
+ 777           ** \return  none
+ 778           ** \note   
+ 779          *****************************************************************************/
+ 780          void  EPWM_DisableReverseOutput( uint8_t ChannelMask)
+ 781          {
+ 782   1        PWMPINV &=~ChannelMask;
+ 783   1      }
+ 784          /*****************************************************************************
+ 785           ** \brief   EPWM_TrigSoftwareBrake
+ 786           **      触发软件刹车
+ 787           ** \param [in] none
+ 788           ** \return  none
+ 789           ** \note   
+ 790          *****************************************************************************/
+ 791          void  EPWM_TrigSoftwareBrake(void)
+ 792          {
+ 793   1        PWMFBKC |= EPWM_PWMFBKC_PWMFBKSW_Msk;
+ 794   1      }
+ 795          /*****************************************************************************
+ 796           ** \brief   EPWM_DisableSoftwareBreake
+ 797           **      关闭软件刹车
+ 798           ** \param [in] none
+C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 14  
+
+ 799           ** \return  none
+ 800           ** \note   
+ 801          *****************************************************************************/
+ 802          void  EPWM_DisableSoftwareBrake(void)
+ 803          {
+ 804   1        PWMFBKC &= ~(EPWM_PWMFBKC_PWMFBKSW_Msk);
+ 805   1      }
+ 806          /*****************************************************************************
+ 807           ** \brief   EPWM_ConfigFBBrake
+ 808           **      设置FB刹车
+ 809           ** \param [in] FBBrakeLevel : 触发条件(1)EPWM_BRK_FB_LOW
+ 810           **                                   (2)EPWM_BRK_FB_HIGH 
+ 811           ** \return  none
+ 812           ** \note   
+ 813          *****************************************************************************/
+ 814          void  EPWM_ConfigFBBrake(uint8_t FBBrakeLevel)
+ 815          {
+ 816   1        uint8_t Temp=0;
+ 817   1        
+ 818   1        Temp = PWMFBKC;
+ 819   1        Temp &= ~(EPWM_PWMFBKC_PWMFBES_Msk);
+ 820   1        Temp |=  FBBrakeLevel;
+ 821   1        PWMFBKC = Temp;
+ 822   1      }
+ 823          /*****************************************************************************
+ 824           ** \brief   EPWM_AllIntEnable
+ 825           **      使能EPWM总中断
+ 826           ** \param [in] none
+ 827           ** \return  none
+ 828           ** \note   
+ 829          *****************************************************************************/
+ 830          void  EPWM_AllIntEnable(void)
+ 831          {
+ 832   1        EIE2 |= IRQ_EIE2_PWMIE_Msk;
+ 833   1      }
+ 834          /*****************************************************************************
+ 835           ** \brief   EPWM_AllIntDisable
+ 836           **      关闭EPWM总中断
+ 837           ** \param [in] none
+ 838           ** \return  none
+ 839           ** \note   
+ 840           ****************************************************************************/
+ 841          void  EPWM_AllIntDisable(void)
+ 842          {
+ 843   1        EIE2 &= ~(IRQ_EIE2_PWMIE_Msk);
+ 844   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1225    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

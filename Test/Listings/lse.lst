@@ -1,0 +1,238 @@
+C51 COMPILER V9.52.0.0   LSE                                                               09/06/2023 18:09:43 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE LSE
+OBJECT MODULE PLACED IN .\Objects\lse.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\Lib\lse.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Code\CMS;.\Code\Lib;.
+                    -\Code\User;.\Code\Hardware\UART) DEBUG PRINT(.\Listings\lse.lst) TABS(2) OBJECT(.\Objects\lse.obj)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          * Copyright (C) 2019 China Micro Semiconductor Limited Company. All Rights Reserved.
+   3          *
+   4          * This software is owned and published by:
+   5          * CMS LLC, No 2609-10, Taurus Plaza, TaoyuanRoad, NanshanDistrict, Shenzhen, China.
+   6          *
+   7          * BY DOWNLOADING, INSTALLING OR USING THIS SOFTWARE, YOU AGREE TO BE BOUND
+   8          * BY ALL THE TERMS AND CONDITIONS OF THIS AGREEMENT.
+   9          *
+  10          * This software contains source code for use with CMS
+  11          * components. This software is licensed by CMS to be adapted only
+  12          * for use in systems utilizing CMS components. CMS shall not be
+  13          * responsible for misuse or illegal use of this software for devices not
+  14          * supported herein. CMS is providing this software "AS IS" and will
+  15          * not be responsible for issues arising from incorrect user implementation
+  16          * of the software.
+  17          *
+  18          * This software may be replicated in part or whole for the licensed use,
+  19          * with the restriction that this Disclaimer and Copyright notice must be
+  20          * included with each copy of this software, whether used in part or whole,
+  21          * at all times.
+  22          */
+  23          
+  24          /****************************************************************************/
+  25          /** \file lse.c
+  26          **
+  27          **  
+  28          **
+  29          **  History:
+  30          **  
+  31          *****************************************************************************/
+  32          /****************************************************************************/
+  33          /*  include files
+  34          *****************************************************************************/
+  35          #include "lse.h"
+  36          
+  37          /****************************************************************************/
+  38          /*  Local pre-processor symbols/macros('#define')
+  39          ****************************************************************************/
+  40          
+  41          /****************************************************************************/
+  42          /*  Global variable definitions(declared in header file with 'extern')
+  43          ****************************************************************************/
+  44          
+  45          
+  46          /****************************************************************************/
+  47          /*  Local type definitions('typedef')
+  48          ****************************************************************************/
+  49          
+  50          /****************************************************************************/
+  51          /*  Local variable  definitions('static')
+  52          ****************************************************************************/
+  53          
+  54          /****************************************************************************/
+C51 COMPILER V9.52.0.0   LSE                                                               09/06/2023 18:09:43 PAGE 2   
+
+  55          /*  Local function prototypes('static')
+  56          ****************************************************************************/
+  57          
+  58          /****************************************************************************/
+  59          /*  Function implementation - global ('extern') and local('static')
+  60          ****************************************************************************/
+  61          
+  62          /*****************************************************************************
+  63           ** \brief   LSE_EnableLSE
+  64           **      使能LSE模块
+  65           ** \param [in] none
+  66           ** \return 
+  67           ** \note   
+  68           *****************************************************************************/
+  69          void  LSE_EnableLSE(void)
+  70          {
+  71   1        LSECON |= LSE_LSECON_LSEEN_Msk;
+  72   1      }
+  73          /*****************************************************************************
+  74           ** \brief   SYS_DisableLSE
+  75           **      关闭LSE模块
+  76           ** \param [in] none
+  77           ** \return 
+  78           ** \note   
+  79           *****************************************************************************/
+  80          void  LSE_DisableLSE(void)
+  81          {
+  82   1        LSECON &= ~(LSE_LSECON_LSEEN_Msk);
+  83   1      }
+  84          
+  85          /*****************************************************************************
+  86           ** \brief   LSE_Start
+  87           **      使能LSE计数
+  88           ** \param [in] none
+  89           ** \return 
+  90           ** \note   
+  91           *****************************************************************************/
+  92          void LSE_Start(void)
+  93          {
+  94   1        LSECON |=LSE_LSECON_LSECNTEN_Msk;
+  95   1      }
+  96          /*****************************************************************************
+  97           ** \brief   LSE_Stop
+  98           **      停止LSE计数
+  99           ** \param [in] none
+ 100           ** \return 
+ 101           ** \note   
+ 102           *****************************************************************************/
+ 103          void LSE_Stop(void)
+ 104          {
+ 105   1        LSECON &= ~(LSE_LSECON_LSECNTEN_Msk);
+ 106   1      }
+ 107          
+ 108          /*****************************************************************************
+ 109           ** \brief   LSE_ConfigLSE
+ 110           **      设置LSE定时时间
+ 111           ** \param [in] Time: 16位定时时间
+ 112           ** \return none
+ 113           ** \note   
+ 114           *****************************************************************************/
+ 115          void LSE_ConfigLSE(uint16_t  Time)
+ 116          {
+C51 COMPILER V9.52.0.0   LSE                                                               09/06/2023 18:09:43 PAGE 3   
+
+ 117   1        LSECRH = (Time>>8);
+ 118   1        LSECRL = Time;
+ 119   1      }
+ 120          
+ 121          /*****************************************************************************
+ 122           ** \brief   LSE_EnableLSEWakeup
+ 123           **      使能LSE定时唤醒功能
+ 124           ** \param [in] none
+ 125           ** \return 
+ 126           ** \note   
+ 127           *****************************************************************************/
+ 128          void LSE_EnableLSEWakeup(void)
+ 129          {
+ 130   1        LSECON |= (LSE_LSECON_LSEWUEN_Msk);
+ 131   1      }
+ 132          
+ 133          /*****************************************************************************
+ 134           ** \brief   LSE_DisableLSEWakeup
+ 135           **      关闭LSE定时唤醒功能
+ 136           ** \param [in] none
+ 137           ** \return none
+ 138           ** \note    
+ 139           *****************************************************************************/
+ 140          void LSE_DisableLSEWakeup(void)
+ 141          {
+ 142   1        LSECON &= ~(LSE_LSECON_LSEWUEN_Msk);
+ 143   1      }
+ 144          
+ 145          /*****************************************************************************
+ 146           ** \brief   LSE_EnableLSEInt
+ 147           **      使能LSE中断
+ 148           ** \param [in] none
+ 149           ** \return none
+ 150           ** \note   
+ 151           *****************************************************************************/
+ 152          void LSE_EnableLSEInt(void)
+ 153          {
+ 154   1        LSECON |= LSE_LSECON_LSEIE_Msk;
+ 155   1      }
+ 156          /*****************************************************************************
+ 157           ** \brief  LSE_DisableLSEInt
+ 158           **      关闭LSE中断
+ 159           ** \param [in] none
+ 160           ** \return none
+ 161           ** \note   
+ 162           *****************************************************************************/
+ 163          void LSE_DisableLSEInt(void)
+ 164          {
+ 165   1        LSECON &= ~(LSE_LSECON_LSEIE_Msk);
+ 166   1      }
+ 167          /*****************************************************************************
+ 168           ** \brief   LSE_GetLSEIntFlag
+ 169           **      获取LSE中断标志位
+ 170           ** \param [in] none
+ 171           ** \return 1：产生中断  0：无中断
+ 172           ** \note  
+ 173           *****************************************************************************/
+ 174          uint8_t  LSE_GetLSEIntFlag(void)
+ 175          {
+ 176   1        return((LSECON & LSE_LSECON_LSEIF_Msk)? 1:0);
+ 177   1      }
+ 178          /*****************************************************************************
+C51 COMPILER V9.52.0.0   LSE                                                               09/06/2023 18:09:43 PAGE 4   
+
+ 179           ** \brief   LSE_ClearLSEIntFlag
+ 180           **      清除LSE中断标志位
+ 181           ** \param [in] none
+ 182           ** \return none
+ 183           ** \note   
+ 184           *****************************************************************************/
+ 185          void  LSE_ClearLSEIntFlag(void)
+ 186          {
+ 187   1        LSECON &= ~(LSE_LSECON_LSEIF_Msk);
+ 188   1      }
+ 189          /*****************************************************************************
+ 190           ** \brief   LSE_GetLSEState
+ 191           **      获取LSE稳定状态位
+ 192           ** \param [in] none
+ 193           ** \return 1：稳定  0：未稳定
+ 194           ** \note  
+ 195           *****************************************************************************/
+ 196          uint8_t  LSE_GetLSEState(void)
+ 197          {
+ 198   1        return((LSECON & LSE_LSECON_LSESTA_Msk)? 1:0);
+ 199   1      }
+ 200          
+ 201          
+ 202          
+ 203          
+ 204          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    109    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

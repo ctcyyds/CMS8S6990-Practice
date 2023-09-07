@@ -1,0 +1,722 @@
+C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE ACMP
+OBJECT MODULE PLACED IN .\Objects\acmp.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\Lib\acmp.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Code\CMS;.\Code\Lib;
+                    -.\Code\User;.\Code\Hardware\UART) DEBUG PRINT(.\Listings\acmp.lst) TABS(2) OBJECT(.\Objects\acmp.obj)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          * Copyright (C) 2019 China Micro Semiconductor Limited Company. All Rights Reserved.
+   3          *
+   4          * This software is owned and published by:
+   5          * CMS LLC, No 2609-10, Taurus Plaza, TaoyuanRoad, NanshanDistrict, Shenzhen, China.
+   6          *
+   7          * BY DOWNLOADING, INSTALLING OR USING THIS SOFTWARE, YOU AGREE TO BE BOUND
+   8          * BY ALL THE TERMS AND CONDITIONS OF THIS AGREEMENT.
+   9          *
+  10          * This software contains source code for use with CMS
+  11          * components. This software is licensed by CMS to be adapted only
+  12          * for use in systems utilizing CMS components. CMS shall not be
+  13          * responsible for misuse or illegal use of this software for devices not
+  14          * supported herein. CMS is providing this software "AS IS" and will
+  15          * not be responsible for issues arising from incorrect user implementation
+  16          * of the software.
+  17          *
+  18          * This software may be replicated in part or whole for the licensed use,
+  19          * with the restriction that this Disclaimer and Copyright notice must be
+  20          * included with each copy of this software, whether used in part or whole,
+  21          * at all times.
+  22          */
+  23          
+  24          /****************************************************************************/
+  25          /** \file acmp.c
+  26          **
+  27          **  
+  28          **
+  29          **  History:
+  30          **  
+  31          *****************************************************************************/
+  32          /****************************************************************************/
+  33          /*  include files
+  34          *****************************************************************************/
+  35          #include "acmp.h"
+  36          
+  37          /****************************************************************************/
+  38          /*  Local pre-processor symbols/macros('#define')
+  39          *****************************************************************************/
+  40          
+  41          /****************************************************************************/
+  42          /*  Global variable definitions(declared in header file with 'extern')
+  43          *****************************************************************************/
+  44          
+  45          /****************************************************************************/
+  46          /*  Local type definitions('typedef')
+  47          *****************************************************************************/
+  48          
+  49          /****************************************************************************/
+  50          /*  Local variable  definitions('static')
+  51          *****************************************************************************/
+  52          
+  53          /****************************************************************************/
+  54          /*  Local function prototypes('static')
+C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 2   
+
+  55          *****************************************************************************/
+  56          
+  57          /****************************************************************************/
+  58          /*  Function implementation - global ('extern') and local('static')
+  59          *****************************************************************************/
+  60          /******************************************************************************
+  61           ** \brief   ACMP_ConfigPositive
+  62           **      设置比较器正端输入
+  63           ** \param [in] ACMPn: ACMP0、ACMP1
+  64           **        PositiveSource:  (1)ACMP_POSSEL_P0   :C0P0
+  65           **                (2)ACMP_POSSEL_P1    :C0P1
+  66           **                (3)ACMP_POSSEL_P2    :C0P2
+  67           **                (4)ACMP_POSSEL_P2    :C0P4
+  68           **                (5)ACMP_POSSEL_P2    :C0P5
+  69           **                (6)ACMP_POSSEL_PGAANA  
+  70           ** \return  none
+  71           ** \note   
+  72          *****************************************************************************/
+  73          void ACMP_ConfigPositive( uint8_t ACMPn, uint8_t PositiveSource)
+  74          {
+  75   1        uint8_t Temp=0;
+  76   1        
+  77   1        if(ACMP0 == ACMPn)
+  78   1        {
+  79   2          Temp = C0CON0;
+  80   2          Temp &= ~(ACMP_C0CON0_C0PS_Msk);
+  81   2          Temp |= PositiveSource;
+  82   2          C0CON0 = Temp;
+  83   2        }
+  84   1        if(ACMP1 == ACMPn)
+  85   1        {
+  86   2          Temp = C1CON0;
+  87   2          Temp &= ~(ACMP_C1CON0_C1PS_Msk);
+  88   2          Temp |= PositiveSource;
+  89   2          C1CON0 = Temp;
+  90   2        }
+  91   1      }
+  92          
+  93          /*****************************************************************************
+  94           ** \brief   ACMP_ConfigNegative
+  95           **      设置比较器负端输入
+  96           ** \param [in] ACMPn: ACMP0、ACMP1
+  97           **       NegativeSource:  (1)ACMP_NEGSEL_CN    :CnN      
+  98           **                (2)ACMP_NEGSEL_VREF_BG : ACMP Vref 源选择BG
+  99           **                (3)ACMP_NEGSEL_VREF_VDD：ACMP Vref 源选择VDD
+ 100           **                (4)ACMP_NEGSEL_BG    : 内部1.2V BG 
+ 101           **       Vref_k: 基准电压系数K ：0x00~0x0f (Vref_k_2_20 ... Vref_k_17_20)
+ 102           ** \return  none
+ 103           ** \note   比较器0/1共用基准电压系数
+ 104          *****************************************************************************/
+ 105          void ACMP_ConfigNegative( uint8_t ACMPn, uint8_t NegativeSource, uint8_t Vref_k)
+ 106          {
+ 107   1        uint8_t Temp=0;
+ 108   1        
+ 109   1        if(ACMP0 == ACMPn)
+ 110   1        {
+ 111   2          Temp = C0CON0;
+ 112   2          Temp &= ~( ACMP_C0CON0_C0NS_Msk);
+ 113   2          Temp |= (1<< ACMP_C0CON0_C0NS_Pos);
+ 114   2          if((ACMP_NEGSEL_BG == NegativeSource) || (ACMP_NEGSEL_VREF_BG == NegativeSource) || (ACMP_NEGSEL_VREF_VD
+             -D == NegativeSource))
+ 115   2          {
+C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 3   
+
+ 116   3            C0CON0 = Temp;
+ 117   3          }
+ 118   2        }
+ 119   1        if(ACMP1 == ACMPn)
+ 120   1        {
+ 121   2          Temp = C1CON0;
+ 122   2          Temp &= ~(ACMP_C1CON0_C1NS_Msk);
+ 123   2          Temp |= (1<< ACMP_C1CON0_C1NS_Pos);
+ 124   2          
+ 125   2          if((ACMP_NEGSEL_BG == NegativeSource) || (ACMP_NEGSEL_VREF_BG == NegativeSource) || (ACMP_NEGSEL_VREF_VD
+             -D == NegativeSource))
+ 126   2          {
+ 127   3            C1CON0 = Temp;
+ 128   3          } 
+ 129   2        }
+ 130   1        
+ 131   1        if((ACMP_NEGSEL_BG == NegativeSource))
+ 132   1        {
+ 133   2          CNVRCON &= ~(ACMP_CNVRCON_CNSVR_Msk);
+ 134   2        } 
+ 135   1        
+ 136   1        if((ACMP_NEGSEL_VREF_BG == NegativeSource))
+ 137   1        {
+ 138   2          CNVRCON =0x00;
+ 139   2          CNVRCON |= ACMP_CNVRCON_CNDIVS_Msk | ACMP_CNVRCON_CNSVR_Msk | Vref_k;   
+ 140   2        }
+ 141   1        
+ 142   1        if((ACMP_NEGSEL_VREF_VDD == NegativeSource))
+ 143   1        {
+ 144   2          CNVRCON =0x00;
+ 145   2          CNVRCON |= ACMP_CNVRCON_CNSVR_Msk | Vref_k; 
+ 146   2        }
+ 147   1      }
+ 148          /*****************************************************************************
+ 149           ** \brief   ACMP_EnableReverseOutput
+ 150           **      开启反相输出
+ 151           ** \param [in] ACMPn: ACMP0、ACMP1
+ 152           ** \return  none
+ 153           ** \note   
+ 154          *****************************************************************************/
+ 155          void  ACMP_EnableReverseOutput( uint8_t ACMPn)
+ 156          {
+ 157   1        if(ACMP0 == ACMPn)
+ 158   1        {
+ 159   2          C0CON2 |= (ACMP_C0CON2_C0POS_Msk);
+ 160   2        }
+ 161   1        if(ACMP1 == ACMPn)
+ 162   1        {
+ 163   2          C1CON2 |= (ACMP_C1CON2_C1POS_Msk);
+ 164   2        }
+ 165   1      }
+ 166          /*****************************************************************************
+ 167           ** \brief   ACMP_DisableReverseOutput
+ 168           **      关闭反向输出
+ 169           ** \param [in] ACMPn: ACMP0、ACMP1
+ 170           ** \return  none
+ 171           ** \note   
+ 172          ******************************************************************************/
+ 173          void  ACMP_DisableReverseOutput( uint8_t ACMPn)
+ 174          {
+ 175   1        if(ACMP0 == ACMPn)
+ 176   1        {
+C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 4   
+
+ 177   2          C0CON2 &= ~(ACMP_C0CON2_C0POS_Msk);
+ 178   2        }
+ 179   1        if(ACMP1 == ACMPn)
+ 180   1        {
+ 181   2          C1CON2 &= ~(ACMP_C1CON2_C1POS_Msk);
+ 182   2        }
+ 183   1      }
+ 184          
+ 185          /*****************************************************************************
+ 186           ** \brief   ACMP_EnableFilter
+ 187           **      开启滤波
+ 188           ** \param [in] ACMPn: ACMP0、ACMP1
+ 189           **       FilterTime: (1)ACMP_NFCLK_1_TSYS ....
+ 190           ** \return  none
+ 191           ** \note   
+ 192          *****************************************************************************/
+ 193          void  ACMP_EnableFilter( uint8_t ACMPn, uint8_t FilterTime)
+ 194          {
+ 195   1        uint8_t Temp=0;
+ 196   1        
+ 197   1        if(ACMP0 == ACMPn)
+ 198   1        {
+ 199   2          Temp = C0CON2;
+ 200   2          Temp &= ~(ACMP_C0CON2_C0FS_Msk );
+ 201   2          Temp |= (ACMP_C0CON2_C0FE_Msk) | FilterTime;
+ 202   2          C0CON2 = Temp;
+ 203   2        }
+ 204   1        if(ACMP1 == ACMPn)
+ 205   1        {
+ 206   2          Temp = C1CON2;
+ 207   2          Temp &= ~(ACMP_C1CON2_C1FS_Msk );
+ 208   2          Temp |= (ACMP_C1CON2_C1FE_Msk) | FilterTime;
+ 209   2          C1CON2 = Temp;
+ 210   2        }
+ 211   1      }
+ 212          /*****************************************************************************
+ 213           ** \brief   ACMP_DisableFilter
+ 214           **      关闭滤波
+ 215           ** \param [in] ACMPn: ACMP0、ACMP1
+ 216           ** \return  none
+ 217           ** \note   
+ 218          ******************************************************************************/
+ 219          void  ACMP_DisableFilter( uint8_t ACMPn)
+ 220          {
+ 221   1        if(ACMP0 == ACMPn)
+ 222   1        {
+ 223   2          C0CON2 &= ~(ACMP_C0CON2_C0FE_Msk);
+ 224   2        }
+ 225   1        if(ACMP1 == ACMPn)
+ 226   1        {
+ 227   2          C1CON2 &= ~(ACMP_C1CON2_C1FE_Msk);
+ 228   2        }
+ 229   1      }
+ 230          
+ 231          /*****************************************************************************
+ 232           ** \brief   ACMP_EnableACMPBrake
+ 233           **      开启比较器Epwm刹车
+ 234           ** \param [in] ACMPn: ACMP0、ACMP1
+ 235           **       ACMPBrake:  (1)ACMP_BRK_RISING    : ACMP的输出上升沿触发
+ 236           **               (2)ACMP_BRK_FALLING   : ACMP的输出下降沿触发
+ 237           ** \return  none
+ 238           ** \note   
+C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 5   
+
+ 239           *****************************************************************************/
+ 240          void ACMP_EnableACMPBrake( uint8_t ACMPn, uint8_t ACMPBrake)
+ 241          {
+ 242   1        uint8_t Temp=0;
+ 243   1        
+ 244   1        if(ACMP0 == ACMPn)
+ 245   1        {
+ 246   2          Temp = CNFBCON;
+ 247   2          Temp &= ~(ACMP_CNFBCON_C0FBLS_Msk);
+ 248   2          Temp |= ACMPBrake;
+ 249   2          CNFBCON = Temp;
+ 250   2        }
+ 251   1        if(ACMP1 == ACMPn)
+ 252   1        {
+ 253   2          Temp = CNFBCON;
+ 254   2          Temp &= ~(ACMP_CNFBCON_C1FBLS_Msk);
+ 255   2          Temp |= ACMPBrake<<(ACMP_CNFBCON_C1FBLS_Pos);
+ 256   2          CNFBCON = Temp;
+ 257   2        } 
+ 258   1      }
+ 259          /*****************************************************************************
+ 260           ** \brief   ACMP_EnableInt
+ 261           **      开启ACMP中断
+ 262           ** \param [in] ACMPn: ACMP0、ACMP1
+ 263           ** \return  none
+ 264           ** \note   
+ 265          *****************************************************************************/
+ 266          void ACMP_EnableInt( uint8_t ACMPn)
+ 267          {
+ 268   1        CNIE |= (1<<ACMPn);
+ 269   1      }
+ 270          /*****************************************************************************
+ 271           ** \brief   ACMP_DisableInt
+ 272           **      关闭ACMP中断
+ 273           ** \param [in] ACMPn: ACMP0、ACMP1
+ 274           ** \return  none
+ 275           ** \note   
+ 276          ******************************************************************************/
+ 277          void ACMP_DisableInt( uint8_t ACMPn)
+ 278          {
+ 279   1        CNIE &=  ~(1<< ACMPn);
+ 280   1      }
+ 281          /******************************************************************************
+ 282           ** \brief   ACMP_GetIntFlag
+ 283           **      获取ACMP中断标志
+ 284           ** \param [in] ACMPn: ACMP0、ACMP1
+ 285           ** \return  0: 无比较器中断产生 ， 非0：产生中断
+ 286           ** \note   
+ 287          ******************************************************************************/
+ 288          uint8_t ACMP_GetIntFlag( uint8_t ACMPn)
+ 289          {
+ 290   1        return(CNIF & (1<< ACMPn));
+ 291   1      }
+ 292          /*****************************************************************************
+ 293           ** \brief   ACMP_ClearIntFlag
+ 294           **     清ACMP中断
+ 295           ** \param [in] ACMPn: ACMP0、ACMP1
+ 296           ** \return  none
+ 297           ** \note   
+ 298          *****************************************************************************/
+ 299          void ACMP_ClearIntFlag( uint8_t ACMPn)
+ 300          {
+C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 6   
+
+ 301   1        CNIF = 0xff & (~(1<< ACMPn));
+ 302   1      }
+ 303          
+ 304          /*****************************************************************************
+ 305           ** \brief   ACMP_Start
+ 306           **      开启ACMP
+ 307           ** \param [in] ACMPn: ACMP0、ACMP1
+ 308           ** \return  none
+ 309           ** \note   
+ 310          *****************************************************************************/
+ 311          void ACMP_Start( uint8_t ACMPn)
+ 312          {
+ 313   1        if(ACMP0 == ACMPn)
+ 314   1        {
+ 315   2          C0CON0 |= (ACMP_C0CON0_C0EN_Msk);
+ 316   2        }
+ 317   1        if(ACMP1 == ACMPn)
+ 318   1        {
+ 319   2          C1CON0 |= (ACMP_C1CON0_C1EN_Msk);
+ 320   2        }
+ 321   1      }
+ 322          
+ 323          /*****************************************************************************
+ 324           ** \brief   ACMP_Stop
+ 325           **      关闭ACMP
+ 326           ** \param [in] ACMPn: ACMP0、ACMP1
+ 327           ** \return  none
+ 328           ** \note   
+ 329          *****************************************************************************/
+ 330          void ACMP_Stop( uint8_t ACMPn)
+ 331          {
+ 332   1        if(ACMP0 == ACMPn)
+ 333   1        {
+ 334   2          C0CON0 &= ~(ACMP_C0CON0_C0EN_Msk);
+ 335   2        }
+ 336   1        if(ACMP1 == ACMPn)
+ 337   1        {
+ 338   2          C1CON0 &= ~(ACMP_C1CON0_C1EN_Msk);
+ 339   2        }
+ 340   1      }
+ 341          
+ 342          /*****************************************************************************
+ 343           ** \brief   ACMP_GetResult
+ 344           **      获取比较器值
+ 345           ** \param [in] ACMPn: ACMP0、ACMP1
+ 346           ** \return  0/1
+ 347           ** \note   
+ 348          *****************************************************************************/
+ 349          uint8_t ACMP_GetResult( uint8_t ACMPn)
+ 350          {
+ 351   1        if(ACMP0 == ACMPn)
+ 352   1        {
+ 353   2          return ((C0CON1 & ACMP_C0CON1_C0OUT_Msk)? 1:0);
+ 354   2        }
+ 355   1          if(ACMP1 == ACMPn)
+ 356   1        {
+ 357   2          return ((C1CON1 & ACMP_C1CON1_C1OUT_Msk)? 1:0);
+ 358   2        }
+ 359   1        return 0;
+ 360   1      }
+ 361          
+ 362          /*****************************************************************************
+C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 7   
+
+ 363           ** \brief   ACMP_EnableHYS
+ 364           **      配置比较器迟滞模式
+ 365           ** \param [in] ACMPn: ACMP0、ACMP1
+ 366           **       HYSSelect :(1)ACMP_HYS_SEL_P  : 正迟滞
+ 367           **              (2)ACMP_HYS_SEL_N  : 负迟滞
+ 368          **               (3)ACMP_HYS_SEL_BOUTH :正负迟滞
+ 369           **       HYSValue  :(1)ACMP_HYS_10 ：10mV
+ 370           **              (2)ACMP_HYS_20 ：20mV
+ 371           **              (3)ACMP_HYS_60 ：60mV
+ 372           ** \return  none
+ 373           ** \note   
+ 374          *****************************************************************************/
+ 375          void ACMP_EnableHYS( uint8_t ACMPn ,uint8_t HYSSelect, uint8_t HYSValue)
+ 376          {
+ 377   1        uint8_t Temp=0;
+ 378   1        
+ 379   1        if(ACMP0 == ACMPn)
+ 380   1        {
+ 381   2          Temp = C0HYS;
+ 382   2          Temp &= ~(ACMP_C0HYS_PNS_Msk | ACMP_C0HYS_S_Msk);
+ 383   2          Temp |= ((HYSSelect<<ACMP_C0HYS_PNS_Pos) | HYSValue);
+ 384   2          C0HYS = Temp;
+ 385   2        }
+ 386   1        if(ACMP1 == ACMPn)
+ 387   1        {
+ 388   2          Temp = C1HYS;
+ 389   2          Temp &= ~(ACMP_C1HYS_PNS_Msk | ACMP_C1HYS_S_Msk);
+ 390   2          Temp |= ((HYSSelect<<ACMP_C1HYS_PNS_Pos) | HYSValue); 
+ 391   2          C1HYS = Temp; 
+ 392   2        } 
+ 393   1      }
+ 394          
+ 395          /*****************************************************************************
+ 396           ** \brief   ACMP_DisableHYS
+ 397           **      关闭比较器迟滞模式
+ 398           ** \param [in] ACMPn: ACMP0、ACMP1
+ 399           ** \return  none
+ 400           ** \note   
+ 401          *****************************************************************************/
+ 402          void ACMP_DisableHYS( uint8_t ACMPn)
+ 403          {
+ 404   1        if(ACMP0 == ACMPn)
+ 405   1        {
+ 406   2          C0HYS &= ~ACMP_C0HYS_S_Msk ;
+ 407   2        }
+ 408   1        if(ACMP1 == ACMPn)
+ 409   1        {
+ 410   2          C1HYS &= ~ACMP_C1HYS_S_Msk;
+ 411   2        }
+ 412   1      }
+ 413          
+ 414          /*****************************************************************************
+ 415           ** \brief   ACMP_ConfigOffsetAdj
+ 416           **      配置ACMP失调电压调节方式
+ 417           ** \param [in] ACMPn : ACMP0、ACMP1   
+ 418           **       OffsetAdjMode:  (1)ACMP_OFFSET_CONFIG
+ 419           **               (2)ACMP_OFFSET_ACMPDJ
+ 420           **       AdjVlue : 失调电压调节值：0x00~0x1f
+ 421           ** \return  none
+ 422           ** \note   
+ 423          *****************************************************************************/
+ 424          void ACMP_ConfigOffsetAdj(uint8_t ACMPn,uint8_t OffsetAdjMode, uint8_t AdjVlue)
+C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 8   
+
+ 425          {
+ 426   1        uint8_t Temp=0;
+ 427   1        
+ 428   1        if(ACMP0 == ACMPn)
+ 429   1        {
+ 430   2          if( ACMP_OFFSET_ACMPDJ== OffsetAdjMode)
+ 431   2          {
+ 432   3            Temp = C0CON1;
+ 433   3            Temp &= ~(ACMP_C0CON1_C0ADJ_Msk);
+ 434   3            Temp |= AdjVlue;
+ 435   3            C0CON1 = Temp;
+ 436   3            
+ 437   3            C0ADJE = ACMP_OFFSET_ACMPDJ;
+ 438   3          }
+ 439   2        }
+ 440   1        if(ACMP1 == ACMPn)
+ 441   1        {
+ 442   2          if( ACMP_OFFSET_ACMPDJ== OffsetAdjMode)
+ 443   2          {
+ 444   3            Temp =C1CON1;
+ 445   3            Temp &= ~(ACMP_C1CON1_C1ADJ_Msk);
+ 446   3            Temp |= AdjVlue;
+ 447   3            C1CON1 = Temp;
+ 448   3            
+ 449   3            C1ADJE = ACMP_OFFSET_ACMPDJ;
+ 450   3          }
+ 451   2        } 
+ 452   1      }
+ 453          
+ 454          /*****************************************************************************
+ 455           ** \brief   ACMP_Delay
+ 456           **      延时函数
+ 457           ** \param [in]none
+ 458           ** \return  none
+ 459           ** \note   
+ 460          *****************************************************************************/
+ 461          static void ACMP_Delay(void)
+ 462          {
+ 463   1        volatile uint8_t i;
+ 464   1        for(i=0;i<50;i++)
+ 465   1          _nop_();
+ 466   1      }
+ 467          /*****************************************************************************
+ 468           ** \brief   ACMP_GetOffsetAdjValue
+ 469           **      获取ACMP失调电压调节值
+ 470           ** \param [in] ACMPn : ACMP0、ACMP1
+ 471           **       ACMPMode:  (1)ACMP_ADJ_POS_IN   //正端与负端连接, 接到P端
+ 472           **              (2)ACMP_ADJ_NAG_IN   //正端与负端连接, 接到N端
+ 473           **              (3)ACMP_ADJ_GND      //正端与负端连接，接到GND
+ 474           **       InputPort: (1)ACMP_POSSEL_P0 .... ACMP_POSSEL_PGAANA   //正端输入选择
+ 475           **             （2）ACMP_NEGSEL_N .... ACMP_NEGSEL_BG      //负端的输入选择
+ 476           **       NegVref_K: 0x00~0x0f (Vref_k_2_20 ... Vref_k_17_20)  //基准电压系数K
+ 477           ** \return  5位失调电压修调值
+ 478           ** \note   
+ 479           *****************************************************************************/
+ 480          uint8_t  ACMP_GetOffsetAdjValue(uint8_t ACMPn, uint8_t ACMPMode, uint8_t InputPort, uint8_t NegVref_K)
+ 481          {
+ 482   1        uint8_t temp, AcmpOut,Adjvalue, ACMPCON1Temp;
+ 483   1        
+ 484   1        Adjvalue =0;  
+ 485   1        if(ACMP0 == ACMPn)
+ 486   1        {
+C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 9   
+
+ 487   2          /*(1)关闭ACMP模块*/
+ 488   2          ACMP_Stop(ACMP0);
+ 489   2          /*(2)设置ACMP模块修调模式*/   
+ 490   2          if(ACMP_ADJ_POS_IN == ACMPMode)//正端与负端连接, 接到P端
+ 491   2          {
+ 492   3            C0CON1 |= (1<<ACMP_C0CON1_C0CRS_Pos);
+ 493   3      
+ 494   3            temp = C0CON0;
+ 495   3            temp &= ~(ACMP_C0CON0_C0PS_Msk);
+ 496   3            switch(InputPort)     //选择正端端口
+ 497   3            {
+ 498   4              case ACMP_POSSEL_P0:
+ 499   4                P13CFG = 0x01;
+ 500   4                C0CON0 = temp;
+ 501   4                break;
+ 502   4              case ACMP_POSSEL_P1:
+ 503   4                P00CFG = 0x01;
+ 504   4                temp |= 0x01;
+ 505   4                C0CON0 = temp;
+ 506   4                break;
+ 507   4              case ACMP_POSSEL_P2:
+ 508   4                P01CFG = 0x01;
+ 509   4                temp |= 0x02;
+ 510   4                C0CON0 = temp;
+ 511   4                break;          
+ 512   4              case ACMP_POSSEL_P4:
+ 513   4                P30CFG = 0x01;
+ 514   4                temp |= 0x04;
+ 515   4                C0CON0 = temp;
+ 516   4                break;
+ 517   4              case ACMP_POSSEL_P5:
+ 518   4                P24CFG = 0x01;
+ 519   4                temp |= 0x05;
+ 520   4                C0CON0 = temp;
+ 521   4                break;
+ 522   4              case ACMP_POSSEL_PGAANA:
+ 523   4                temp |= 0x06;
+ 524   4                C0CON0 = temp;
+ 525   4                break;          
+ 526   4              default:
+ 527   4                temp |= 0x07;
+ 528   4                C0CON0 = temp;
+ 529   4                break;
+ 530   4            }
+ 531   3          }
+ 532   2          if(ACMP_ADJ_GND == ACMPMode)//正端与负端连接, 接到GND
+ 533   2          {
+ 534   3            C0CON1 &= ~(ACMP_C0CON1_C0CRS_Msk);
+ 535   3            C0CON0 |= ACMP_C0CON0_C0N2G_Msk;
+ 536   3          }
+ 537   2          if(ACMP_ADJ_NAG_IN == ACMPMode)//正端与负端连接, 接到N端
+ 538   2          {
+ 539   3            C0CON1 &= ~(ACMP_C0CON1_C0CRS_Msk);
+ 540   3            C0CON0 &= ~(ACMP_C0CON0_C0N2G_Msk);
+ 541   3            ACMP_ConfigNegative(ACMP0, InputPort, NegVref_K);
+ 542   3            if(ACMP_NEGSEL_CN == InputPort)
+ 543   3            {
+ 544   4              P14CFG = 0x01;
+ 545   4            }
+ 546   3          }
+ 547   2          
+ 548   2          /*(3)开启ACMP修调模式*/ 
+C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 10  
+
+ 549   2          C0CON0 |= ACMP_C0CON0_C0COFM_Msk;
+ 550   2          C0ADJE = 0xAA;     //使用C0ADJE中的数据
+ 551   2          C0CON1 &= ~(ACMP_C0CON1_C0ADJ_Msk);
+ 552   2          
+ 553   2          /*(4)开启ACMP*/
+ 554   2          ACMP_Start(ACMP0);
+ 555   2          ACMP_Delay();
+ 556   2          /*(5)查询修调值*/
+ 557   2          ACMPCON1Temp = C0CON1;
+ 558   2          AcmpOut = ACMP_GetResult(ACMP0);
+ 559   2          for(temp=0; temp<0x20;temp++)
+ 560   2          {
+ 561   3            ACMPCON1Temp &=~(ACMP_C0CON1_C0ADJ_Msk);
+ 562   3            ACMPCON1Temp |= temp;
+ 563   3            C0CON1 = ACMPCON1Temp;
+ 564   3            ACMP_Delay();
+ 565   3            if(AcmpOut!= ACMP_GetResult(ACMP0))
+ 566   3            {
+ 567   4              Adjvalue = temp;
+ 568   4              break; 
+ 569   4            }
+ 570   3          }
+ 571   2          /*(6)关闭ACMP*/
+ 572   2          C0CON0 = 0x00;
+ 573   2          C0CON1 = 0x00;
+ 574   2          return  Adjvalue; 
+ 575   2        } 
+ 576   1        if(ACMP1 == ACMPn)
+ 577   1        {
+ 578   2          /*(1)关闭ACMP模块*/
+ 579   2          ACMP_Stop(ACMP1);
+ 580   2          /*(2)设置ACMP模块修调模式*/   
+ 581   2          if(ACMP_ADJ_POS_IN == ACMPMode)//正端与负端连接, 接到P端
+ 582   2          {
+ 583   3            C1CON1 |= (1<<ACMP_C1CON1_C1CRS_Pos);
+ 584   3      
+ 585   3            temp = C1CON0;
+ 586   3            temp &= ~(ACMP_C1CON0_C1PS_Msk);
+ 587   3            switch(InputPort)     //选择正端端口
+ 588   3            {
+ 589   4              case ACMP_POSSEL_P0:
+ 590   4                P04CFG = 0x01;
+ 591   4                C1CON0 = temp;
+ 592   4                break;
+ 593   4              case ACMP_POSSEL_P1:
+ 594   4                P03CFG = 0x01;
+ 595   4                temp |= 0x01;
+ 596   4                C1CON0 = temp;
+ 597   4                break;
+ 598   4              case ACMP_POSSEL_P2:
+ 599   4                P02CFG = 0x01;
+ 600   4                temp |= 0x02;
+ 601   4                C1CON0 = temp;
+ 602   4                break;          
+ 603   4              case ACMP_POSSEL_P4:
+ 604   4                P30CFG = 0x01;
+ 605   4                temp |= 0x04;
+ 606   4                C1CON0 = temp;
+ 607   4                break;
+ 608   4              case ACMP_POSSEL_P5:
+ 609   4                P24CFG = 0x01;
+ 610   4                temp |= 0x05;
+C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 11  
+
+ 611   4                C1CON0 = temp;
+ 612   4                break;
+ 613   4              case ACMP_POSSEL_PGAANA:
+ 614   4                temp |= 0x06;
+ 615   4                C1CON0 = temp;
+ 616   4                break;          
+ 617   4              default:
+ 618   4                temp |= 0x07;
+ 619   4                C1CON0 = temp;
+ 620   4                break;
+ 621   4            }
+ 622   3          }
+ 623   2          if(ACMP_ADJ_GND == ACMPMode)//正端与负端连接, 接到GND
+ 624   2          {
+ 625   3            C1CON1 &= ~(ACMP_C1CON1_C1CRS_Msk);
+ 626   3            C1CON0 |= ACMP_C1CON0_C1N2G_Msk;
+ 627   3          }
+ 628   2          if(ACMP_ADJ_NAG_IN == ACMPMode)//正端与负端连接, 接到N端
+ 629   2          {
+ 630   3            C1CON1 &= ~(ACMP_C0CON1_C0CRS_Msk);
+ 631   3            C1CON0 &= ~(ACMP_C0CON0_C0N2G_Msk);
+ 632   3            ACMP_ConfigNegative(ACMP1, InputPort, NegVref_K);
+ 633   3            if(ACMP_NEGSEL_CN == InputPort)
+ 634   3            {
+ 635   4              P05CFG = 0x01;
+ 636   4            }
+ 637   3          }
+ 638   2          /*(3)开启ACMP修调模式*/ 
+ 639   2          C1CON0 |= ACMP_C1CON0_C1COFM_Msk;
+ 640   2          C1ADJE = 0xAA;     //使用C0ADJE中的数据
+ 641   2          C1CON1 &= ~(ACMP_C1CON1_C1ADJ_Msk);
+ 642   2          /*(4)开启ACMP*/
+ 643   2          ACMP_Start(ACMP1);
+ 644   2          ACMP_Delay();
+ 645   2          /*(5)查询修调值*/
+ 646   2          ACMPCON1Temp = C1CON1;
+ 647   2      
+ 648   2          AcmpOut = ACMP_GetResult(ACMP1);
+ 649   2          for(temp=0; temp<0x20;temp++)
+ 650   2          {
+ 651   3            ACMPCON1Temp &=~(ACMP_C1CON1_C1ADJ_Msk);
+ 652   3            ACMPCON1Temp |= temp;
+ 653   3            C1CON1 = ACMPCON1Temp;
+ 654   3            ACMP_Delay();
+ 655   3            if(AcmpOut!= ACMP_GetResult(ACMP1))
+ 656   3            {
+ 657   4              Adjvalue = temp;
+ 658   4              break; 
+ 659   4            }
+ 660   3          }
+ 661   2          /*(6)关闭ACMP*/
+ 662   2          C1CON0 = 0x00;
+ 663   2          C1CON1 = 0x00;
+ 664   2          return  Adjvalue; 
+ 665   2        } 
+ 666   1        return 0;
+ 667   1      }
+ 668          
+ 669          
+ 670          
+
+
+C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 12  
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1069    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       7
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
