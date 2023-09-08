@@ -1,4 +1,4 @@
-C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 1   
+C51 COMPILER V9.52.0.0   EPWM                                                              09/07/2023 18:07:16 PAGE 1   
 
 
 C51 COMPILER V9.52.0.0, COMPILATION OF MODULE EPWM
@@ -62,7 +62,7 @@ line level    source
   52          
   53          /****************************************************************************/
   54          /*  Local function prototypes ('static')
-C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 2   
+C51 COMPILER V9.52.0.0   EPWM                                                              09/07/2023 18:07:16 PAGE 2   
 
   55          *****************************************************************************/
   56          
@@ -126,7 +126,7 @@ line level    source
  114   2             break;
  115   2          case EPWM3:
  116   2             PWM23PSC = 0x01;
-C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 3   
+C51 COMPILER V9.52.0.0   EPWM                                                              09/07/2023 18:07:16 PAGE 3   
 
  117   2             PWM3DIV = ClkDiv;
  118   2             break; 
@@ -190,7 +190,7 @@ line level    source
  176   1      }
  177          /*****************************************************************************
  178           ** \brief   EPWM_ConfigChannelSymDuty
-C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 4   
+C51 COMPILER V9.52.0.0   EPWM                                                              09/07/2023 18:07:16 PAGE 4   
 
  179           **      设置EPWM通道对称模式占空比
  180           ** \param [in] ChannelNum  :EPWM0,EPWM1,EPWM2,EPWM3,EPWM4,EPWM5
@@ -254,7 +254,7 @@ line level    source
  238   2            PWMDD0H = DowmCmp>>8;
  239   2            PWMDD0L = DowmCmp;  
  240   2            PWMLOADEN |= EPWM_CH_0_MSK;   
-C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 5   
+C51 COMPILER V9.52.0.0   EPWM                                                              09/07/2023 18:07:16 PAGE 5   
 
  241   2            break;
  242   2          case EPWM1:
@@ -318,7 +318,7 @@ line level    source
  300          {     
  301   1        PWMCNTM |= ChannelMask; 
  302   1      }
-C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 6   
+C51 COMPILER V9.52.0.0   EPWM                                                              09/07/2023 18:07:16 PAGE 6   
 
  303          
  304          /****************************************************************************
@@ -382,7 +382,7 @@ line level    source
  362          {
  363   1        uint8_t Temp=0;
  364   1        
-C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 7   
+C51 COMPILER V9.52.0.0   EPWM                                                              09/07/2023 18:07:16 PAGE 7   
 
  365   1        Temp = PWMFBKC;
  366   1        Temp &= ~(EPWM_PWMFBKC_PWMFBCCE_Msk);
@@ -446,7 +446,7 @@ line level    source
  424           **      设置EPWM通道刹车电平
  425           ** \param [in]  ChannelMask： EPWM_CH_0_MSK ~ EPWM_CH_5_MSK
  426           **          BrakeLevel: FaultBreake后的EPWM通道电平 ：0/1(低/高)
-C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 8   
+C51 COMPILER V9.52.0.0   EPWM                                                              09/07/2023 18:07:16 PAGE 8   
 
  427           ** \return  none
  428           ** \note   
@@ -510,7 +510,7 @@ line level    source
  486   2            break;
  487   2          case EPWM2:
  488   2          case EPWM3:
-C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 9   
+C51 COMPILER V9.52.0.0   EPWM                                                              09/07/2023 18:07:16 PAGE 9   
 
  489   2            PWMDTE  &= ~(EPWM_PWMDTE_PWM23DTE_Msk);
  490   2            break;
@@ -574,7 +574,7 @@ line level    source
  548          *****************************************************************************/
  549          void EPWM_DisableUpCmpInt( uint8_t ChannelMask)
  550          {
-C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 10  
+C51 COMPILER V9.52.0.0   EPWM                                                              09/07/2023 18:07:16 PAGE 10  
 
  551   1        PWMUIE &= ~ChannelMask ;
  552   1      }
@@ -638,7 +638,7 @@ line level    source
  610   1      }
  611          /*****************************************************************************
  612           ** \brief   EPWM_ClearUpCmpIntFlag
-C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 11  
+C51 COMPILER V9.52.0.0   EPWM                                                              09/07/2023 18:07:16 PAGE 11  
 
  613           **      清除向下比较中断标志位
  614           ** \param [in]  ChannelNum :EPWM0,EPWM1,EPWM2,EPWM3,EPWM4,EPWM5
@@ -702,7 +702,7 @@ line level    source
  672           ** \return   none     
  673           ** \note   
  674          *****************************************************************************/
-C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 12  
+C51 COMPILER V9.52.0.0   EPWM                                                              09/07/2023 18:07:16 PAGE 12  
 
  675          void EPWM_EnableZeroInt( uint8_t ChannelMask)
  676          {
@@ -766,7 +766,7 @@ line level    source
  734          {
  735   1        PWMFBKC  &= ~(EPWM_PWMFBKC_PWMFBIE_Msk);
  736   1      }
-C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 13  
+C51 COMPILER V9.52.0.0   EPWM                                                              09/07/2023 18:07:16 PAGE 13  
 
  737          /*****************************************************************************
  738           ** \brief   EPWM_GetFaultBrakeIntFlag
@@ -830,7 +830,7 @@ line level    source
  796           ** \brief   EPWM_DisableSoftwareBreake
  797           **      关闭软件刹车
  798           ** \param [in] none
-C51 COMPILER V9.52.0.0   EPWM                                                              09/06/2023 18:09:42 PAGE 14  
+C51 COMPILER V9.52.0.0   EPWM                                                              09/07/2023 18:07:16 PAGE 14  
 
  799           ** \return  none
  800           ** \note   

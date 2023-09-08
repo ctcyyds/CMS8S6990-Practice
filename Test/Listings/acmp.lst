@@ -1,4 +1,4 @@
-C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 1   
+C51 COMPILER V9.52.0.0   ACMP                                                              09/07/2023 18:07:15 PAGE 1   
 
 
 C51 COMPILER V9.52.0.0, COMPILATION OF MODULE ACMP
@@ -62,7 +62,7 @@ line level    source
   52          
   53          /****************************************************************************/
   54          /*  Local function prototypes('static')
-C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 2   
+C51 COMPILER V9.52.0.0   ACMP                                                              09/07/2023 18:07:15 PAGE 2   
 
   55          *****************************************************************************/
   56          
@@ -126,7 +126,7 @@ line level    source
  114   2          if((ACMP_NEGSEL_BG == NegativeSource) || (ACMP_NEGSEL_VREF_BG == NegativeSource) || (ACMP_NEGSEL_VREF_VD
              -D == NegativeSource))
  115   2          {
-C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 3   
+C51 COMPILER V9.52.0.0   ACMP                                                              09/07/2023 18:07:15 PAGE 3   
 
  116   3            C0CON0 = Temp;
  117   3          }
@@ -190,7 +190,7 @@ line level    source
  174          {
  175   1        if(ACMP0 == ACMPn)
  176   1        {
-C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 4   
+C51 COMPILER V9.52.0.0   ACMP                                                              09/07/2023 18:07:15 PAGE 4   
 
  177   2          C0CON2 &= ~(ACMP_C0CON2_C0POS_Msk);
  178   2        }
@@ -254,7 +254,7 @@ line level    source
  236           **               (2)ACMP_BRK_FALLING   : ACMP的输出下降沿触发
  237           ** \return  none
  238           ** \note   
-C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 5   
+C51 COMPILER V9.52.0.0   ACMP                                                              09/07/2023 18:07:15 PAGE 5   
 
  239           *****************************************************************************/
  240          void ACMP_EnableACMPBrake( uint8_t ACMPn, uint8_t ACMPBrake)
@@ -318,7 +318,7 @@ line level    source
  298          *****************************************************************************/
  299          void ACMP_ClearIntFlag( uint8_t ACMPn)
  300          {
-C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 6   
+C51 COMPILER V9.52.0.0   ACMP                                                              09/07/2023 18:07:15 PAGE 6   
 
  301   1        CNIF = 0xff & (~(1<< ACMPn));
  302   1      }
@@ -382,7 +382,7 @@ line level    source
  360   1      }
  361          
  362          /*****************************************************************************
-C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 7   
+C51 COMPILER V9.52.0.0   ACMP                                                              09/07/2023 18:07:15 PAGE 7   
 
  363           ** \brief   ACMP_EnableHYS
  364           **      配置比较器迟滞模式
@@ -446,7 +446,7 @@ line level    source
  422           ** \note   
  423          *****************************************************************************/
  424          void ACMP_ConfigOffsetAdj(uint8_t ACMPn,uint8_t OffsetAdjMode, uint8_t AdjVlue)
-C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 8   
+C51 COMPILER V9.52.0.0   ACMP                                                              09/07/2023 18:07:15 PAGE 8   
 
  425          {
  426   1        uint8_t Temp=0;
@@ -510,7 +510,7 @@ line level    source
  484   1        Adjvalue =0;  
  485   1        if(ACMP0 == ACMPn)
  486   1        {
-C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 9   
+C51 COMPILER V9.52.0.0   ACMP                                                              09/07/2023 18:07:15 PAGE 9   
 
  487   2          /*(1)关闭ACMP模块*/
  488   2          ACMP_Stop(ACMP0);
@@ -574,7 +574,7 @@ line level    source
  546   3          }
  547   2          
  548   2          /*(3)开启ACMP修调模式*/ 
-C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 10  
+C51 COMPILER V9.52.0.0   ACMP                                                              09/07/2023 18:07:15 PAGE 10  
 
  549   2          C0CON0 |= ACMP_C0CON0_C0COFM_Msk;
  550   2          C0ADJE = 0xAA;     //使用C0ADJE中的数据
@@ -638,7 +638,7 @@ line level    source
  608   4              case ACMP_POSSEL_P5:
  609   4                P24CFG = 0x01;
  610   4                temp |= 0x05;
-C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 11  
+C51 COMPILER V9.52.0.0   ACMP                                                              09/07/2023 18:07:15 PAGE 11  
 
  611   4                C1CON0 = temp;
  612   4                break;
@@ -702,7 +702,7 @@ line level    source
  670          
 
 
-C51 COMPILER V9.52.0.0   ACMP                                                              09/06/2023 18:09:42 PAGE 12  
+C51 COMPILER V9.52.0.0   ACMP                                                              09/07/2023 18:07:15 PAGE 12  
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
    CODE SIZE        =   1069    ----

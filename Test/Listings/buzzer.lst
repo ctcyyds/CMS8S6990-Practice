@@ -1,4 +1,4 @@
-C51 COMPILER V9.52.0.0   BUZZER                                                            09/06/2023 18:09:42 PAGE 1   
+C51 COMPILER V9.52.0.0   BUZZER                                                            09/07/2023 18:07:16 PAGE 1   
 
 
 C51 COMPILER V9.52.0.0, COMPILATION OF MODULE BUZZER
@@ -62,7 +62,7 @@ line level    source
   52          
   53          /****************************************************************************/
   54          /*  Local function prototypes('static')
-C51 COMPILER V9.52.0.0   BUZZER                                                            09/06/2023 18:09:42 PAGE 2   
+C51 COMPILER V9.52.0.0   BUZZER                                                            09/07/2023 18:07:16 PAGE 2   
 
   55          ****************************************************************************/
   56          
@@ -126,7 +126,7 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
    EDATA SIZE       =   ----    ----
-C51 COMPILER V9.52.0.0   BUZZER                                                            09/06/2023 18:09:42 PAGE 3   
+C51 COMPILER V9.52.0.0   BUZZER                                                            09/07/2023 18:07:16 PAGE 3   
 
    HDATA SIZE       =   ----    ----
    XDATA CONST SIZE =   ----    ----

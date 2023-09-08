@@ -1,4 +1,4 @@
-C51 COMPILER V9.52.0.0   ADC                                                               09/06/2023 18:09:42 PAGE 1   
+C51 COMPILER V9.52.0.0   ADC                                                               09/07/2023 18:07:15 PAGE 1   
 
 
 C51 COMPILER V9.52.0.0, COMPILATION OF MODULE ADC
@@ -62,7 +62,7 @@ line level    source
   52          
   53          /****************************************************************************/
   54          /*  Local function prototypes('static')
-C51 COMPILER V9.52.0.0   ADC                                                               09/06/2023 18:09:42 PAGE 2   
+C51 COMPILER V9.52.0.0   ADC                                                               09/07/2023 18:07:15 PAGE 2   
 
   55          *****************************************************************************/
   56          
@@ -126,7 +126,7 @@ line level    source
  114          /*****************************************************************************
  115           ** \brief   ADC_DisableHardwareTrig
  116           **      关闭硬件触发ADC
-C51 COMPILER V9.52.0.0   ADC                                                               09/06/2023 18:09:42 PAGE 3   
+C51 COMPILER V9.52.0.0   ADC                                                               09/07/2023 18:07:15 PAGE 3   
 
  117           ** \param [in] none
  118           ** \return  none
@@ -190,7 +190,7 @@ line level    source
  176          *****************************************************************************/
  177          void  ADC_ConfigAN31(uint8_t An31Channel)
  178          {
-C51 COMPILER V9.52.0.0   ADC                                                               09/06/2023 18:09:42 PAGE 4   
+C51 COMPILER V9.52.0.0   ADC                                                               09/07/2023 18:07:15 PAGE 4   
 
  179   1        uint8_t Temp=0;
  180   1        
@@ -254,7 +254,7 @@ line level    source
  238          
  239          /*****************************************************************************
  240           ** \brief   ADC_GetCmpResult
-C51 COMPILER V9.52.0.0   ADC                                                               09/06/2023 18:09:42 PAGE 5   
+C51 COMPILER V9.52.0.0   ADC                                                               09/07/2023 18:07:15 PAGE 5   
 
  241           **      获取ADC比较结果
  242           ** \param [in]  none
@@ -318,7 +318,7 @@ line level    source
  300          /*****************************************************************************
  301           ** \brief   ADC_ClearIntFlag
  302           **      清ADC转换完成中断标志位
-C51 COMPILER V9.52.0.0   ADC                                                               09/06/2023 18:09:42 PAGE 6   
+C51 COMPILER V9.52.0.0   ADC                                                               09/07/2023 18:07:15 PAGE 6   
 
  303           ** \param [in] none
  304           ** \return  none
@@ -382,7 +382,7 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
-C51 COMPILER V9.52.0.0   ADC                                                               09/06/2023 18:09:42 PAGE 7   
+C51 COMPILER V9.52.0.0   ADC                                                               09/07/2023 18:07:15 PAGE 7   
 
    EDATA SIZE       =   ----    ----
    HDATA SIZE       =   ----    ----

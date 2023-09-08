@@ -13,6 +13,7 @@
 #include "../Hardware/TIMER/Test_timer.h"
 #include "../Hardware/EPWM/Test_Epwm.h"
 #include "../Hardware/LED/Test_LED.h"
+#include "../Hardware/EPWM/Breathing_lamp.h"
 /******************************************************/
 
 /****************[Library functions]****************/

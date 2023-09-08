@@ -518,8 +518,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\Code\Hardware\EPWM\Test_Epwm.c</PathWithFileName>
-      <FilenameWithoutPath>Test_Epwm.c</FilenameWithoutPath>
+      <PathWithFileName>.\Code\Hardware\DELAY\delay.c</PathWithFileName>
+      <FilenameWithoutPath>delay.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -530,8 +530,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\Code\Hardware\EPWM\Test_Epwm.h</PathWithFileName>
-      <FilenameWithoutPath>Test_Epwm.h</FilenameWithoutPath>
+      <PathWithFileName>.\Code\Hardware\DELAY\delay.h</PathWithFileName>
+      <FilenameWithoutPath>delay.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -542,8 +542,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\Code\Hardware\DELAY\delay.c</PathWithFileName>
-      <FilenameWithoutPath>delay.c</FilenameWithoutPath>
+      <PathWithFileName>.\Code\Hardware\EPWM\Breathing_lamp.c</PathWithFileName>
+      <FilenameWithoutPath>Breathing_lamp.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -554,8 +554,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\Code\Hardware\DELAY\delay.h</PathWithFileName>
-      <FilenameWithoutPath>delay.h</FilenameWithoutPath>
+      <PathWithFileName>.\Code\Hardware\EPWM\Breathing_lamp.h</PathWithFileName>
+      <FilenameWithoutPath>Breathing_lamp.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

@@ -1,4 +1,4 @@
-C51 COMPILER V9.52.0.0   TEST_EPWM                                                         09/06/2023 18:09:45 PAGE 1   
+C51 COMPILER V9.52.0.0   TEST_EPWM                                                         09/07/2023 15:34:13 PAGE 1   
 
 
 C51 COMPILER V9.52.0.0, COMPILATION OF MODULE TEST_EPWM
@@ -62,7 +62,7 @@ line level    source
   50   1          // 使能总中断
   51   1          IRQ_ALL_ENABLE();
   52   1      }
-C51 COMPILER V9.52.0.0   TEST_EPWM                                                         09/06/2023 18:09:45 PAGE 2   
+C51 COMPILER V9.52.0.0   TEST_EPWM                                                         09/07/2023 15:34:13 PAGE 2   
 
   53          /**********************************/
 

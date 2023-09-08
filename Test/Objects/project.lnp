@@ -20,8 +20,8 @@
 ".\Objects\Test_Uart.obj",
 ".\Objects\Test_LED.obj",
 ".\Objects\Test_timer.obj",
-".\Objects\Test_Epwm.obj",
-".\Objects\delay.obj" 
+".\Objects\delay.obj",
+".\Objects\Breathing_lamp.obj" 
 TO ".\Objects\project" 
 
 PRINT(".\Listings\project.map")

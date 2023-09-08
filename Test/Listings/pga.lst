@@ -1,4 +1,4 @@
-C51 COMPILER V9.52.0.0   PGA                                                               09/06/2023 18:09:43 PAGE 1   
+C51 COMPILER V9.52.0.0   PGA                                                               09/07/2023 18:07:17 PAGE 1   
 
 
 C51 COMPILER V9.52.0.0, COMPILATION OF MODULE PGA
@@ -62,7 +62,7 @@ line level    source
   52          
   53          /****************************************************************************/
   54          /*  Local function prototypes('static')
-C51 COMPILER V9.52.0.0   PGA                                                               09/06/2023 18:09:43 PAGE 2   
+C51 COMPILER V9.52.0.0   PGA                                                               09/07/2023 18:07:17 PAGE 2   
 
   55          ****************************************************************************/
   56          
@@ -126,7 +126,7 @@ line level    source
  114           ** \param [in] none
  115           ** \return  none
  116           ** \note   
-C51 COMPILER V9.52.0.0   PGA                                                               09/06/2023 18:09:43 PAGE 3   
+C51 COMPILER V9.52.0.0   PGA                                                               09/07/2023 18:07:17 PAGE 3   
 
  117          *****************************************************************************/
  118          void PGA_DisableOutput(void)
@@ -190,7 +190,7 @@ line level    source
  176          {
  177   1        PGACON1 &= ~(PGA_PGACON1_PGAAMS_Msk);
  178   1      }
-C51 COMPILER V9.52.0.0   PGA                                                               09/06/2023 18:09:43 PAGE 4   
+C51 COMPILER V9.52.0.0   PGA                                                               09/07/2023 18:07:17 PAGE 4   
 
  179          
  180          /*****************************************************************************
@@ -254,7 +254,7 @@ line level    source
  238           ** \return  0/1
  239           ** \note   
  240          *****************************************************************************/
-C51 COMPILER V9.52.0.0   PGA                                                               09/06/2023 18:09:43 PAGE 5   
+C51 COMPILER V9.52.0.0   PGA                                                               09/07/2023 18:07:17 PAGE 5   
 
  241          static uint8_t PGA_GetOutValue(void)
  242          {
@@ -318,7 +318,7 @@ line level    source
  300   1        PGA_Delay();  
  301   1        PgaOut = PGA_GetOutValue();
  302   1        for(temp=0; temp<0x40; temp++)
-C51 COMPILER V9.52.0.0   PGA                                                               09/06/2023 18:09:43 PAGE 6   
+C51 COMPILER V9.52.0.0   PGA                                                               09/07/2023 18:07:17 PAGE 6   
 
  303   1        {
  304   2          PGACON3Temp &= 0xc0;

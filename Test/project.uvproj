@@ -522,16 +522,6 @@
               <FilePath>.\Code\Hardware\TIMER\Test_timer.h</FilePath>
             </File>
             <File>
-              <FileName>Test_Epwm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Code\Hardware\EPWM\Test_Epwm.c</FilePath>
-            </File>
-            <File>
-              <FileName>Test_Epwm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Code\Hardware\EPWM\Test_Epwm.h</FilePath>
-            </File>
-            <File>
               <FileName>delay.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Code\Hardware\DELAY\delay.c</FilePath>
@@ -540,6 +530,16 @@
               <FileName>delay.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Code\Hardware\DELAY\delay.h</FilePath>
+            </File>
+            <File>
+              <FileName>Breathing_lamp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Code\Hardware\EPWM\Breathing_lamp.c</FilePath>
+            </File>
+            <File>
+              <FileName>Breathing_lamp.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Code\Hardware\EPWM\Breathing_lamp.h</FilePath>
             </File>
           </Files>
         </Group>
