@@ -1,4 +1,4 @@
-C51 COMPILER V9.52.0.0   OPA                                                               09/07/2023 18:07:16 PAGE 1   
+C51 COMPILER V9.52.0.0   OPA                                                               09/08/2023 16:09:04 PAGE 1   
 
 
 C51 COMPILER V9.52.0.0, COMPILATION OF MODULE OPA
@@ -62,7 +62,7 @@ line level    source
   52          
   53          /****************************************************************************/
   54          /*  Local function prototypes('static')
-C51 COMPILER V9.52.0.0   OPA                                                               09/07/2023 18:07:16 PAGE 2   
+C51 COMPILER V9.52.0.0   OPA                                                               09/08/2023 16:09:04 PAGE 2   
 
   55          ****************************************************************************/
   56          
@@ -126,7 +126,7 @@ line level    source
  114   2          Temp |= (PositiveSource << OPA_OP1CON0_OP1PS_Pos);  
  115   2          OP1CON0 = Temp;
  116   2        }
-C51 COMPILER V9.52.0.0   OPA                                                               09/07/2023 18:07:16 PAGE 3   
+C51 COMPILER V9.52.0.0   OPA                                                               09/08/2023 16:09:04 PAGE 3   
 
  117   1      }
  118          
@@ -190,7 +190,7 @@ line level    source
  176   1        if(OPA0 == OPAn)
  177   1        {
  178   2          OP0CON0 &= ~(OPA_OP0CON0_OP0OS_Msk);
-C51 COMPILER V9.52.0.0   OPA                                                               09/07/2023 18:07:16 PAGE 4   
+C51 COMPILER V9.52.0.0   OPA                                                               09/08/2023 16:09:04 PAGE 4   
 
  179   2        }
  180   1        if(OPA1 == OPAn)
@@ -254,7 +254,7 @@ line level    source
  238   2        }
  239   1        if(OPA1 == OPAn)
  240   1        {
-C51 COMPILER V9.52.0.0   OPA                                                               09/07/2023 18:07:16 PAGE 5   
+C51 COMPILER V9.52.0.0   OPA                                                               09/08/2023 16:09:04 PAGE 5   
 
  241   2          return ((OP1CON1 & OPA_OP1CON1_OP1DOUT_Msk)? 1:0);
  242   2        } 
@@ -318,7 +318,7 @@ line level    source
  300          uint8_t  OPA_GetOffsetAdjValue(uint8_t OPAn, uint8_t OpaMode)
  301          {
  302   1        uint8_t temp, OPAOut, Adjvalue;
-C51 COMPILER V9.52.0.0   OPA                                                               09/07/2023 18:07:16 PAGE 6   
+C51 COMPILER V9.52.0.0   OPA                                                               09/08/2023 16:09:04 PAGE 6   
 
  303   1        Adjvalue =0;  
  304   1        if(OPA0 == OPAn)
@@ -382,7 +382,7 @@ line level    source
  362   3            {
  363   4              Adjvalue = temp;
  364   4              break;
-C51 COMPILER V9.52.0.0   OPA                                                               09/07/2023 18:07:16 PAGE 7   
+C51 COMPILER V9.52.0.0   OPA                                                               09/08/2023 16:09:04 PAGE 7   
 
  365   4            }
  366   3          }

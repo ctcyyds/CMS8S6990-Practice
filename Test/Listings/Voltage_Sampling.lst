@@ -1,0 +1,60 @@
+C51 COMPILER V9.52.0.0   VOLTAGE_SAMPLING                                                  09/08/2023 17:05:30 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE VOLTAGE_SAMPLING
+OBJECT MODULE PLACED IN .\Objects\Voltage_Sampling.obj
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE Code\Hardware\ADC\Voltage_Sampling.c OMF2 OPTIMIZE(8,SPEED) BROWSE INCDIR(.
+                    -\Code\CMS;.\Code\Lib;.\Code\User;.\Code\Hardware\UART) DEBUG PRINT(.\Listings\Voltage_Sampling.lst) TABS(2) OBJECT(.\Obj
+                    -ects\Voltage_Sampling.obj)
+
+line level    source
+
+   1          #include "../User/All_include.h"
+   2          
+   3          /****************[ADC Init]****************/
+   4          /**
+   5           * @brief ADC的基本配置
+   6           */
+   7          void ADC_Config(void)
+   8          {
+   9   1      
+  10   1          // 设置ADC的运行模式（设置ADC时钟为系统的16分频，左对齐）
+  11   1          ADC_ConfigRunMode(ADC_CLK_DIV_16, ADC_RESULT_LEFT);
+  12   1      
+  13   1          // 使能ADC转换通道
+  14   1          ADC_EnableChannel(ADC_CH_0);
+  15   1          // 设置IO口的复用功能
+  16   1          GPIO_SET_MUX_MODE(P00CFG, GPIO_P00_MUX_AN0);
+  17   1      
+  18   1          // 使能ADC的LDO
+  19   1          ADC_EnableLDO();
+  20   1          // 配置ADC的VREF
+  21   1          ADC_ConfigADCVref(ADC_VREF_3V);
+  22   1      
+  23   1          // 使能硬件触发ADC
+  24   1          ADC_EnableHardwareTrig();
+  25   1          // 配置硬件触发模式
+  26   1          ADC_ConfigHardwareTrig(ADC_TG_ADET, ADC_TG_FALLING); // ADET的下降沿触发
+  27   1      
+  28   1          // 设置IO口的复用功能
+  29   1          GPIO_SET_MUX_MODE(P25CFG, GPIO_MUX_GPIO);
+  30   1          // GPIO上拉功能开启
+  31   1          GPIO_ENABLE_UP(P2UP, GPIO_PIN_5); // 设置P25为上拉
+  32   1          // 设置端口输入功能分配
+  33   1          GPIO_SET_PS_MODE(PS_ADET, GPIO_P25); // 设置P25为ADET功能
+  34   1          printf("%d\r\n", ADC_ConfigADCVref(ADC_VREF_3V));
+*** ERROR C193 IN LINE 34 OF Code\Hardware\ADC\Voltage_Sampling.c: 'parameter': bad operand type
+  35   1      
+  36   1          // 使能ADC中断
+  37   1          ADC_EnableInt();
+  38   1          // 设置中断优先级
+  39   1          IRQ_SET_PRIORITY(IRQ_ADC, IRQ_PRIORITY_HIGH);
+  40   1          // 使能总中断
+  41   1          IRQ_ALL_ENABLE();
+  42   1      
+  43   1          // 开启ADC
+  44   1          ADC_Start();
+  45   1      }
+  46          /*****************************************/
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  1 ERROR(S)

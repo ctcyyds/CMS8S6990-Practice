@@ -1,4 +1,4 @@
-C51 COMPILER V9.52.0.0   UART                                                              09/07/2023 18:07:15 PAGE 1   
+C51 COMPILER V9.52.0.0   UART                                                              09/08/2023 16:09:03 PAGE 1   
 
 
 C51 COMPILER V9.52.0.0, COMPILATION OF MODULE UART
@@ -62,7 +62,7 @@ line level    source
   52          /****************************************************************************/
   53          /*  Local function prototypes('static')
   54          ****************************************************************************/
-C51 COMPILER V9.52.0.0   UART                                                              09/07/2023 18:07:15 PAGE 2   
+C51 COMPILER V9.52.0.0   UART                                                              09/08/2023 16:09:03 PAGE 2   
 
   55          /******************************************************************************
   56           ** \brief UART_ConfigRunMode
@@ -126,7 +126,7 @@ line level    source
  114   3              break;
  115   3            case  UART_BAUD_TMR2:
  116   3              FUNCCR |= SYS_FUNCCR_UART1_CKS1_Msk;
-C51 COMPILER V9.52.0.0   UART                                                              09/07/2023 18:07:15 PAGE 3   
+C51 COMPILER V9.52.0.0   UART                                                              09/08/2023 16:09:03 PAGE 3   
 
  117   3              break;    
  118   3            case  UART_BAUD_BRT:
@@ -190,7 +190,7 @@ line level    source
                 float  BaudRateTemp =0; 
                 float  BaudRate = 0.55;
                 uint16_t PeriodValue =0;
-C51 COMPILER V9.52.0.0   UART                                                              09/07/2023 18:07:15 PAGE 4   
+C51 COMPILER V9.52.0.0   UART                                                              09/08/2023 16:09:03 PAGE 4   
 
                 uint8_t  SMOD_Flag =0;
                 uint8_t  T_Flag =0; 
@@ -254,7 +254,7 @@ line level    source
                   case UART_BAUD_TMR1:  // Timer1
                     T_Flag = ((CKCON & TMR_CKCON_T1M_Msk)? 1:3);    /*ªÒ»°T1MŒª*/
                     BaudRateTemp = 256 - SystemClock *SMOD_Flag/ 32 / 4 /T_Flag/BaudRateValue;          
-C51 COMPILER V9.52.0.0   UART                                                              09/07/2023 18:07:15 PAGE 5   
+C51 COMPILER V9.52.0.0   UART                                                              09/08/2023 16:09:03 PAGE 5   
 
                     break;
                   case UART_BAUD_TMR4:  // Timer4
@@ -318,7 +318,7 @@ line level    source
  300   1        if(UARTn == UART0)
  301   1        {
  302   2          SCON0 &= ~(UART_SCON0_U0REN_Msk);
-C51 COMPILER V9.52.0.0   UART                                                              09/07/2023 18:07:15 PAGE 6   
+C51 COMPILER V9.52.0.0   UART                                                              09/08/2023 16:09:03 PAGE 6   
 
  303   2        }
  304   1        if(UARTn == UART1)
@@ -382,7 +382,7 @@ line level    source
  362   2        }
  363   1        return 0;
  364   1      }
-C51 COMPILER V9.52.0.0   UART                                                              09/07/2023 18:07:15 PAGE 7   
+C51 COMPILER V9.52.0.0   UART                                                              09/08/2023 16:09:03 PAGE 7   
 
  365          
  366          /******************************************************************************
@@ -446,7 +446,7 @@ line level    source
  424   2          temp  = SCON0;
  425   2          temp &= ~(UART_SCON0_TI0_Msk);
  426   2          SCON0 = temp | UART_SCON0_RI0_Msk;  
-C51 COMPILER V9.52.0.0   UART                                                              09/07/2023 18:07:15 PAGE 8   
+C51 COMPILER V9.52.0.0   UART                                                              09/08/2023 16:09:03 PAGE 8   
 
  427   2        }
  428   1        if(UART1 == UARTn)
@@ -510,7 +510,7 @@ line level    source
  486   1        if(UART0 == UARTn)
  487   1        {
  488   2          if(0 == UARTSendValue)
-C51 COMPILER V9.52.0.0   UART                                                              09/07/2023 18:07:15 PAGE 9   
+C51 COMPILER V9.52.0.0   UART                                                              09/08/2023 16:09:03 PAGE 9   
 
  489   2          {
  490   3            SCON0 &= ~(UART_SCON0_U0TB8_Msk);
@@ -574,7 +574,7 @@ line level    source
  548   1        Temp = BRTCON;
  549   1        Temp &= ~(UART_BRTCON_BRTCKDIV_Msk);
  550   1        Temp |= BRTClkDiv;
-C51 COMPILER V9.52.0.0   UART                                                              09/07/2023 18:07:15 PAGE 10  
+C51 COMPILER V9.52.0.0   UART                                                              09/08/2023 16:09:03 PAGE 10  
 
  551   1        BRTCON = Temp;
  552   1      }

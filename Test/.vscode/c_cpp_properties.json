@@ -44,7 +44,8 @@
                 "c:\\Users\\1\\Desktop\\Test\\Code\\Hardware\\LED",
                 "c:\\Users\\1\\Desktop\\Test\\Code\\Hardware\\TIMER",
                 "c:\\Users\\1\\Desktop\\Test\\Code\\Hardware\\DELAY",
-                "c:\\Users\\1\\Desktop\\Test\\Code\\Hardware\\EPWM"
+                "c:\\Users\\1\\Desktop\\Test\\Code\\Hardware\\EPWM",
+                "c:\\Users\\1\\Desktop\\Test\\Code\\Hardware\\ADC"
             ],
             "defines": [
                 "__C51__",

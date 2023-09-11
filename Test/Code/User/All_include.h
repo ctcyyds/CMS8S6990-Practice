@@ -14,6 +14,7 @@
 #include "../Hardware/EPWM/Test_Epwm.h"
 #include "../Hardware/LED/Test_LED.h"
 #include "../Hardware/EPWM/Breathing_lamp.h"
+#include "../Hardware/ADC/Voltage_Sampling.h"
 /******************************************************/
 
 /****************[Library functions]****************/

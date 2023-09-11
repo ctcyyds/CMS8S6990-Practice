@@ -17,9 +17,9 @@ void EPWM_Config(void)
     EPWM_ConfigChannelPeriod(EPWM4, 0x12c0);
 
     // 设置EPWM占空比
-    EPWM_ConfigChannelSymDuty(EPWM0, D50);
-    EPWM_ConfigChannelSymDuty(EPWM2, D50);
-    EPWM_ConfigChannelSymDuty(EPWM4, D50);
+    EPWM_ConfigChannelSymDuty(EPWM0, D75);
+    EPWM_ConfigChannelSymDuty(EPWM2, D75);
+    EPWM_ConfigChannelSymDuty(EPWM4, D75);
 
     // 设置EPWM的加载方式（自动加载）
     EPWM_EnableAutoLoadMode(EPWM_CH_4_MSK | EPWM_CH_2_MSK | EPWM_CH_0_MSK);

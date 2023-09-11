@@ -1,4 +1,4 @@
-C51 COMPILER V9.52.0.0   SYSTEM                                                            09/07/2023 18:07:17 PAGE 1   
+C51 COMPILER V9.52.0.0   SYSTEM                                                            09/08/2023 16:09:04 PAGE 1   
 
 
 C51 COMPILER V9.52.0.0, COMPILATION OF MODULE SYSTEM
@@ -62,7 +62,7 @@ line level    source
   52          
   53          /****************************************************************************/
   54          /*  Local function prototypes('static')
-C51 COMPILER V9.52.0.0   SYSTEM                                                            09/07/2023 18:07:17 PAGE 2   
+C51 COMPILER V9.52.0.0   SYSTEM                                                            09/08/2023 16:09:04 PAGE 2   
 
   55          ****************************************************************************/
   56          
@@ -126,7 +126,7 @@ line level    source
  114          void SYS_EnableLVDInt(void)
  115          {
  116   1        LVDCON |= LVD_LVDCON_LVDINTE_Msk; 
-C51 COMPILER V9.52.0.0   SYSTEM                                                            09/07/2023 18:07:17 PAGE 3   
+C51 COMPILER V9.52.0.0   SYSTEM                                                            09/08/2023 16:09:04 PAGE 3   
 
  117   1      }
  118          /*****************************************************************************
@@ -190,7 +190,7 @@ line level    source
  176   2          TA = 0x55;
  177   2          WDCON |= WDT_WDCON_WDTRE_Msk;
  178   2        }
-C51 COMPILER V9.52.0.0   SYSTEM                                                            09/07/2023 18:07:17 PAGE 4   
+C51 COMPILER V9.52.0.0   SYSTEM                                                            09/08/2023 16:09:04 PAGE 4   
 
  179   1      }
  180          /*****************************************************************************
@@ -254,7 +254,7 @@ line level    source
  238   2          TA = 0x55;
  239   2          WDCON &= ~(WDT_WDCON_WDTRF_Msk);
  240   2      
-C51 COMPILER V9.52.0.0   SYSTEM                                                            09/07/2023 18:07:17 PAGE 5   
+C51 COMPILER V9.52.0.0   SYSTEM                                                            09/08/2023 16:09:04 PAGE 5   
 
  241   2        }
  242   1      }
@@ -318,7 +318,7 @@ line level    source
  300           ** \note
  301           *****************************************************************************/
  302          uint8_t SYS_GetPowerOnResetFlag(void)
-C51 COMPILER V9.52.0.0   SYSTEM                                                            09/07/2023 18:07:17 PAGE 6   
+C51 COMPILER V9.52.0.0   SYSTEM                                                            09/08/2023 16:09:04 PAGE 6   
 
  303          {
  304   1        return((WDCON & WDT_WDCON_PORF_Msk)? 1:0);
@@ -382,7 +382,7 @@ line level    source
  362   1        _nop_();
  363   1        _nop_();  
  364   1      }
-C51 COMPILER V9.52.0.0   SYSTEM                                                            09/07/2023 18:07:17 PAGE 7   
+C51 COMPILER V9.52.0.0   SYSTEM                                                            09/08/2023 16:09:04 PAGE 7   
 
  365          /*****************************************************************************
  366           ** \brief   SYS_EnterIdle
@@ -446,7 +446,7 @@ line level    source
  424   1        uint8_t Temp=0;
  425   1        
  426   1        Temp = WUTCRH;
-C51 COMPILER V9.52.0.0   SYSTEM                                                            09/07/2023 18:07:17 PAGE 8   
+C51 COMPILER V9.52.0.0   SYSTEM                                                            09/08/2023 16:09:04 PAGE 8   
 
  427   1        Temp &= ~(0x3<<4);
  428   1        Temp |= (clkdiv<<4);

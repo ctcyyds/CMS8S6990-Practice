@@ -1,4 +1,4 @@
-C51 COMPILER V9.52.0.0   TEST_UART                                                         09/07/2023 18:07:17 PAGE 1   
+C51 COMPILER V9.52.0.0   TEST_UART                                                         09/08/2023 16:09:05 PAGE 1   
 
 
 C51 COMPILER V9.52.0.0, COMPILATION OF MODULE TEST_UART
@@ -62,7 +62,7 @@ line level    source
               
                   // 配置UART0的波特率
                   TMR_ConfigTimerClk(TMR1, TMR_CLK_DIV_4);
-C51 COMPILER V9.52.0.0   TEST_UART                                                         09/07/2023 18:07:17 PAGE 2   
+C51 COMPILER V9.52.0.0   TEST_UART                                                         09/08/2023 16:09:05 PAGE 2   
 
                   // 配置Timer运行模式
                   TMR_ConfigRunMode(TMR1, TMR_MODE_TIMING, TMR_TIM_AUTO_8BIT);
@@ -126,7 +126,7 @@ line level    source
                   // 设置UART0运行模式
                   UART_ConfigRunMode(UARTChose, UART_MOD_ASY_8BIT, UART_BAUD_TMR4);
                   // 开启接收模式
-C51 COMPILER V9.52.0.0   TEST_UART                                                         09/07/2023 18:07:17 PAGE 3   
+C51 COMPILER V9.52.0.0   TEST_UART                                                         09/08/2023 16:09:05 PAGE 3   
 
                   UART_EnableReceive(UARTChose);
               
@@ -190,7 +190,7 @@ line level    source
  175   1          return 0;
  176   1      }
  177          
-C51 COMPILER V9.52.0.0   TEST_UART                                                         09/07/2023 18:07:17 PAGE 4   
+C51 COMPILER V9.52.0.0   TEST_UART                                                         09/08/2023 16:09:05 PAGE 4   
 
  178          /**
  179           * @brief 发送的字符

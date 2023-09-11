@@ -21,7 +21,8 @@
 ".\Objects\Test_LED.obj",
 ".\Objects\Test_timer.obj",
 ".\Objects\delay.obj",
-".\Objects\Breathing_lamp.obj" 
+".\Objects\Breathing_lamp.obj",
+".\Objects\Voltage_Sampling.obj" 
 TO ".\Objects\project" 
 
 PRINT(".\Listings\project.map")

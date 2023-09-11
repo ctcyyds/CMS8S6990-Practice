@@ -541,6 +541,16 @@
               <FileType>5</FileType>
               <FilePath>.\Code\Hardware\EPWM\Breathing_lamp.h</FilePath>
             </File>
+            <File>
+              <FileName>Voltage_Sampling.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Code\Hardware\ADC\Voltage_Sampling.c</FilePath>
+            </File>
+            <File>
+              <FileName>Voltage_Sampling.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Code\Hardware\ADC\Voltage_Sampling.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

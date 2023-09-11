@@ -4,11 +4,11 @@
 #include "../User/All_include.h"
 
 /****************[…Ë÷√’ºø’±»]****************/
-#define D0 0x00
-#define D25 0x4B0
-#define D50 0x960
-#define D75 0xE10
-
+#define D0 0x00     // Duty = %0
+#define D25 0x4B0   // Duty = %25
+#define D50 0x960   // Duty = 50%
+#define D75 0xE10   // Duty = 75%
+#define D100 0x12C0 // Duty = 100%
 /*******************************************/
 
 /****************[API]****************/

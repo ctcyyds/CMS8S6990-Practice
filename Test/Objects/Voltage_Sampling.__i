@@ -1,0 +1,1 @@
+"Code\Hardware\ADC\Voltage_Sampling.c" OMF2 OPTIMIZE (8,SPEED) BROWSE INCDIR(.\Code\CMS;.\Code\Lib;.\Code\User;.\Code\Hardware\UART) DEBUG PRINT(.\Listings\Voltage_Sampling.lst) TABS (2) OBJECT(.\Objects\Voltage_Sampling.obj)
